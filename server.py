@@ -3,15 +3,16 @@ import socketio
 import tracemalloc
 import random
 
-from Mazo import mazo as NIGGER
-from Mazo import carta 
+from Mazo import mazo 
 
 sio = socketio.AsyncServer(cors_allowed_origins="*",)
 app = web.Application()
 sio.attach(app)
+
 tracemalloc.start()
 
-mazo = NIGGER.Mazo()
+mazo = mazo.Mazo()
+
 
 @sio.event
 def connect(sid, environ):
@@ -23,15 +24,10 @@ def disconnect(sid):
 
 @sio.event
 async def repartir_cartas(sid):
-    card_list = []
-    for i in range(0,3):
-        cartaPapu = random.choice(mazo.mazo)
-        rnd_card = carta.Carta(cartaPapu)  
-        print(rnd_card.__dict__)
-        card_list.append(rnd_card.__dict__)
-        mazo.mazo.remove(cartaPapu)
-
-        await sio.emit('cartas_jugador', card_list, to=sid)
+    
+    player_cards = mazo.repartir_cartas([])
+    
+    await sio.emit('cartas_jugador', player_cards, to=sid)
 
 
 if __name__ == '__main__':
