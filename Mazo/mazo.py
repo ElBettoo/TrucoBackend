@@ -46,16 +46,3 @@ class Mazo:
             Carta(('123', '12 de basto', 8)),
             Carta(('124', '12 de copa', 8))
         ]
-
-    def repartir_cartas(self, banned_cards) -> list : 
-        i = 0 
-        player_cards = []
-        
-        while i < 3:
-            current_card = random.choice(self.mazo).__dict__
-            if current_card not in banned_cards:
-                player_cards.append(current_card)
-                banned_cards.append(current_card) # medio troll esto
-                i += 1
-        
-        return player_cards
