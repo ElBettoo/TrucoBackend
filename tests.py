@@ -1,12 +1,14 @@
 from Sala import sala
+from Usuario import usuario 
+import random
 
+user = usuario.Usuario("Porky")
 
 sala = sala.Sala("porky123", 2, False, 30, ["porky 123", "joacocucho 45"] )
 
+print(user.get_role())
 
-cartas_porky = sala.ronda.repartir_cartas()
-cartas_guijaj = sala.ronda.repartir_cartas()
+user.set_jugador()
 
-print("Mis Cartas:", cartas_porky ,"\n")
-print("Cartas Guijaa:", cartas_guijaj ,"\n")
-print("Cartas baneadas: ", sala.ronda.banned_cards ,"\n") 
+print(user.get_role())
+

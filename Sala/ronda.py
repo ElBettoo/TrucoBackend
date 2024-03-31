@@ -19,13 +19,11 @@ class Ronda:
                 player_cards.append(current_card)
                 self.banned_cards.append(current_card) 
                 i += 1
-        
         return player_cards
     
     def who_wins(self, player_cards)->list:
 
         win_card = {'cartaNumero': '000', 'numero': '00', 'palo': '0', 'nombre': 'prueba', 'valor': 999999999}
-        
         empate = []
 
         for card in player_cards:
