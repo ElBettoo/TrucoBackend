@@ -21,6 +21,27 @@ class Ronda:
                 i += 1
         
         return player_cards
+    
+    def who_wins(self, player_cards)->list:
+
+        win_card = {'cartaNumero': '000', 'numero': '00', 'palo': '0', 'nombre': 'prueba', 'valor': 999999999}
+        
+        empate = []
+
+        for card in player_cards:
+            if card["valor"] < win_card["valor"]:
+                win_card = card
+                empate = []
+            elif card["valor"] == win_card["valor"]:
+                empate.append(win_card)
+                empate.append(card)
+
+        print(len(empate))
+
+        if len(empate) > 0:
+            return empate
+        else: 
+            return win_card
 
 
         
