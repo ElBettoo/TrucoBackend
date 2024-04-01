@@ -9,3 +9,4 @@ class Carta:
 
 
         
+#joaquin tenes caca en el crebo
