@@ -38,3 +38,4 @@ class Carta:
         return self._numero
 
         
+#joaquin tenes caca en el crebo
