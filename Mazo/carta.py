@@ -1,10 +1,14 @@
+from dataclasses import dataclass
+
+@dataclass
 class Carta:
-    def __init__(self, cartaNumeroYPalo, cartaNombre, cartaValor):
-        self._primaryKey  = cartaNumeroYPalo
-        self._numero = cartaNumeroYPalo[:2]
-        self._palo = cartaNumeroYPalo[-1]
-        self._nombre = cartaNombre
-        self._valor = cartaValor
+    _primaryKey: str
+    _nombre: str
+    _valor: int
+
+    def __post_init__(self):
+        self._numero = self._primaryKey[:2]
+        self._palo = self._primaryKey[-1]
 
     def __str__(self):
         return self._nombre
@@ -14,13 +18,10 @@ class Carta:
             return self._valor < other_card_object.valor
         else:
             return True
-        
-    def __eq__(self, other_card_object):
-        if isinstance(other_card_object, Carta):
-            return self._valor == other_card_object.valor
-        else: 
-            return False
     
+    @property
+    def key(self):
+        return self._primaryKey
 
     @property
     def nombre(self):
