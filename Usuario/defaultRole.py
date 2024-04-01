@@ -1,4 +1,4 @@
-from usuarioRolesBehaviour import UsuarioRolesBehaviour
+from .usuarioRolesBehaviour import UsuarioRolesBehaviour
 
 class DefaultRole(UsuarioRolesBehaviour):
     

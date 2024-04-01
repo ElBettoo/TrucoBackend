@@ -1,15 +1,17 @@
-from jugador import Jugador
-from moderador import Moderador
-from defaultRole import DefaultRole
-from usuarioRolesBehaviour import UsuarioRolesBehaviour
+from .jugador import Jugador
+from .moderador import Moderador
+from .defaultRole import DefaultRole
+from .usuarioRolesBehaviour import UsuarioRolesBehaviour
 
 class Usuario(UsuarioRolesBehaviour):
     
     def __init__(self, username) -> None:
         self.username = username
         self.rol = DefaultRole()
+        self.__rolesPosibles = [DefaultRole, Jugador, Moderador]
 
     def set_role(self, rol):
+        print(rol, rol in self.__rolesPosibles)
         self.rol = rol
 
     def get_role(self):
@@ -17,19 +19,3 @@ class Usuario(UsuarioRolesBehaviour):
     
     def set_jugador(self):
         self.rol = Jugador()
-
-
-user = Usuario("prokki")
-
-print(user.get_role())
-
-user.set_role(Jugador())
-
-user.rol.hola()
-
-print(user.get_role())
-
-
-user.set_role(Moderador())
-
-print(user.get_role())

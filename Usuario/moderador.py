@@ -1,5 +1,5 @@
 
-from usuarioRolesBehaviour import UsuarioRolesBehaviour
+from .usuarioRolesBehaviour import UsuarioRolesBehaviour
 
 class Moderador(UsuarioRolesBehaviour):
     

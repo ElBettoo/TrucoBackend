@@ -1,5 +1,5 @@
-from mano import Mano
-from usuarioRolesBehaviour import UsuarioRolesBehaviour
+from .mano import Mano
+from .usuarioRolesBehaviour import UsuarioRolesBehaviour
 
 class Jugador(UsuarioRolesBehaviour):
     def __init__(self) -> None:
