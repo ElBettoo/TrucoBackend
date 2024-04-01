@@ -36,6 +36,3 @@ class Carta:
     @property
     def numero(self):
         return self._numero
-
-        
-#joaquin tenes caca en el crebo
