@@ -2,7 +2,7 @@ from .usuarioRolesBehaviour import UsuarioRolesBehaviour
 
 class DefaultRole(UsuarioRolesBehaviour):
     
-    def get_role(self):
+    def get_nombre_role(self):
         return "DEFAULT PLAYER"
     
 

@@ -5,6 +5,8 @@ class Ronda:
     def __init__(self) -> None:
         self.mazo = mazo.Mazo()
         self.banned_cards = []
+        self.cartas_jugadas = []
+        self.numero_subronda = 1
     
     def set_banned_cards(self, banned_cards) -> list:
         for i in banned_cards:

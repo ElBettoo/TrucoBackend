@@ -21,6 +21,7 @@ class Carta:
         else: 
             return False
     
+
     @property
     def nombre(self):
         return self._nombre
