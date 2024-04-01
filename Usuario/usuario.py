@@ -7,8 +7,12 @@ import inspect
 class Usuario():
     
     def __init__(self, username) -> None:
-        self.username = username
+        self._username = username
         self.rol = DefaultRole()
+
+    def __str__(self):
+        return self._username
+    
 
     def set_role(self, rol):
         self.rol = rol
@@ -44,6 +48,8 @@ class Usuario():
     def perform_tirar_carta(self, card_index):
         return self.get_role().tirar_carta(card_index)
        
-
+    def perform_set_num_equipo(self, num_equipo):
+        return self.get_role().set_num_equipo(num_equipo)
     
-
+    def perform_get_num_equipo(self):
+        return self.get_role().get_num_equipo()
