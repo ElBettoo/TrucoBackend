@@ -22,10 +22,10 @@ class Ronda:
         cards_quantity = 0 
         player_cards = []
         while cards_quantity < 3:
-            current_random_card = random.choice(self.mazo.mazo)
-            if current_random_card not in self.banned_cards:
+            current_random_card = self.mazo.mazo[random.randint(0,39)]
+            if current_random_card.key not in self.banned_cards:
                 player_cards.append(current_random_card)
-                self.banned_cards.append(current_random_card) 
+                self.banned_cards.append(current_random_card.key) 
                 cards_quantity += 1
         return player_cards
     

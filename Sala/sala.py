@@ -26,7 +26,7 @@ class Sala:
         self.equipos[num_equipo].add_jugador(jugador)
 
     def mostrar_jugadores_equipo(self, num_equipo):
-        return self.equipos[num_equipo].get_jugadores()
+        return self.equipos[num_equipo].players
     
     def get_equipo(self, num_equipo):
         return self.equipos[num_equipo]

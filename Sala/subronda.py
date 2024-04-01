@@ -24,23 +24,25 @@ class SubRonda:
     
     def get_winner_sub_round(self):
 
-        win_card = ""
+        win_card = "NOS VAMOS AL PINGO URA"
         win_player = ""
         empate = []
 
 
-        for par in self.cartas_jugadas_subronda: #par es una tupla que contiene el usuario y la carta que jugó. Con un dictionario era super explosive asi qeu mejro no lo hagamos con dict
-            
-            player = par[0]
-            card = par[1]
+        for par in self.cartas_jugadas_subronda: #par es una tupla que contiene el usuario y la carta que jugó. Con un dictionario era super explosive asi qeu mejro no lo hagamos con dict  
+            player, card = par
 
-            print("carta de  :" , player ," : ", card)
+            #print("carta de  :" , player ," : ", card)
             
             if card > win_card:
                 win_card = card
                 win_player = player
                 empate = []
-            elif card == win_card:
-                empate.append(win_card, card, win_player, player)
+            elif card.valor == win_card.valor:
+                empate.append("win_card, card, win_player, player")
 
+        if len(empate) == 1: 
+            for par in self.cartas_jugadas_subronda:
+                print("ananananshei", par[1])
+            print("tito calderon skibidi fortnite\n")
         return win_player, win_card  if len(empate) == 0 else empate
