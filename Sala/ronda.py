@@ -1,9 +1,12 @@
-from Mazo import mazo
+from Mazo.mazo import Mazo
+from .subronda import SubRonda
+
 import random
 
 class Ronda:
-    def __init__(self) -> None:
-        self.mazo = mazo.Mazo()
+    def __init__(self, numPlayers) -> None:
+        self.mazo = Mazo()
+        self.sub_ronda = SubRonda(numPlayers)
         self.banned_cards = []
         self.cartas_jugadas = []
         self.numero_subronda = 1
@@ -26,18 +29,13 @@ class Ronda:
                 cards_quantity += 1
         return player_cards
     
-    def get_winner(self, total_round_cards: dict)->list:
-        win_card = ""
-        empate = []
+    def get_winner():
+        #sacar el winner de la ronda aca, no de las cartas, eso ya lo hacemos en subronda.
+        #aca hay qeu ver quien consiguió máas piuntos en la subronda
+        # aunqeu enrealidad nose si importa mucho pq tambien hay qeu ahcer el TRUCO QUE DE AHÍ SACAS PUNTOS TMB
+        
+        pass
 
-        for card in total_round_cards:
-            if card > win_card:
-                win_card = card
-                empate = []
-            elif card == win_card:
-                empate.append(win_card, card)
-
-        return win_card if len(empate) == 0 else empate
-
-
+    def get_sub_ronda(self):
+        return self.sub_ronda
         
