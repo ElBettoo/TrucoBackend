@@ -18,8 +18,14 @@ class Sala:
     def get_ronda(self):
         return self.ronda
 
-    def recibir_cartas(self, carta):
-        self.get_ronda().get_sub_ronda().append_to_cartas_jugadas_subronda(carta)
+    def recibir_cartas(self, cartaTuple):
+
+    
+        if type(cartaTuple) == tuple:
+            self.get_ronda().get_sub_ronda().append_to_cartas_jugadas_subronda(cartaTuple)
+        else:
+            print("NO ES UNA TUPLA")
+        
 
     def agregar_jugador_equipo(self, jugador, num_equipo):
         jugador.perform_set_num_equipo(num_equipo)
@@ -30,6 +36,13 @@ class Sala:
     
     def get_equipo(self, num_equipo):
         return self.equipos[num_equipo]
+    
+    def perform_get_winner_ronda(self):
+        return self.ronda.get_winner(self.equipos[0], self.equipos[1])
+
+
+
+
 
 
 
