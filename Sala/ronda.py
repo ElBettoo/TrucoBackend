@@ -32,16 +32,16 @@ class Ronda:
     def get_winner(self, equipo1, equipo2):
 
         if (equipo1.puntos_subronda == 2) and  equipo1.puntos_subronda != equipo2.puntos_subronda:
-            print("Gano el equipo: ", equipo1.__dict__)
-            return equipo1
+            print("Gano el equipo: ", equipo1.nombre, "Puntos:", equipo1.puntos_subronda)
+            return {"TerminoRonda": True, "EquipoGanador": equipo1}
         elif (equipo2.puntos_subronda == 2) and  equipo2.puntos_subronda != equipo1.puntos_subronda:
-            print("Gano el equipo: ", equipo2.__dict__)
-            return equipo2
+            print("Gano el equipo: ", equipo2.nombre, "Puntos:", equipo2.puntos_subronda)
+            return {"TerminoRonda": True, "EquipoGanador": equipo2}
         elif equipo1.puntos_subronda == 3 and equipo2.puntos_subronda == 3:
             print("EMPATE")
-            return equipo1, equipo1
+            return equipo1, equipo2
 
-        return "No one Wins yet"
+        return {"TerminoRonda": False, "EquipoGanador": ""}
         
         
 

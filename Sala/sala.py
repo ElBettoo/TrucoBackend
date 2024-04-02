@@ -1,6 +1,6 @@
 from .ronda import Ronda
 from .equipo import Equipo
-
+from .registroCarta import RegistroCarta
 
 class Sala:
     def __init__(self, codigo_sala, cantidad_jugadores, has_flor, points_to_win, jugadores_en_sala) -> None:
@@ -16,15 +16,13 @@ class Sala:
         self.jugadores_en_sala = jugadores_en_sala
 
     def get_ronda(self):
-        return self.ronda
+        return self.ronda   
 
-    def recibir_cartas(self, cartaTuple):
+    def recibir_cartas(self, user, cartaTirada):
+        RegistroDeCartaTirada = RegistroCarta(user, cartaTirada)
 
-    
-        if type(cartaTuple) == tuple:
-            self.get_ronda().get_sub_ronda().append_to_cartas_jugadas_subronda(cartaTuple)
-        else:
-            print("NO ES UNA TUPLA")
+        self.get_ronda().get_sub_ronda().append_to_cartas_jugadas_subronda(RegistroDeCartaTirada)
+
         
 
     def agregar_jugador_equipo(self, jugador, num_equipo):
