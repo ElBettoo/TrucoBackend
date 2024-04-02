@@ -1,96 +1,54 @@
-from Sala import sala
-from Usuario import usuario 
+from Sala.sala import Sala
+from Usuario.usuario import Usuario
+
 import random
 
-user = usuario.Usuario("Porky")
-user2 = usuario.Usuario("Joaquin Caca En El Crebo")
-user3 = usuario.Usuario("JUANI NIGGEER")
-user4 = usuario.Usuario("GALOFA INSANO")
+user = Usuario("Porky")
+user2 = Usuario("Joaquin Caca En El Crebo")
+user3 = Usuario("JUANI NIGGEER")
+user4 = Usuario("GALOFA INSANO")
 
 
-sala_jugando = sala.Sala("porky123", 2, False, 400, [user, user2, user3, user4] )
+sala_jugando = Sala("porky123", 2, False, 400, [user, user2, user3, user4] )
 
 
 user.set_jugador()
 user2.set_jugador()
-user3.set_jugador()
-user4.set_jugador()
 
 user.obtener_cartas(sala_jugando.ronda.repartir_cartas())
 user2.obtener_cartas(sala_jugando.ronda.repartir_cartas())
-user3.obtener_cartas(sala_jugando.ronda.repartir_cartas())
-user4.obtener_cartas(sala_jugando.ronda.repartir_cartas())
 
 sala_jugando.agregar_jugador_equipo(user, 1)
-sala_jugando.agregar_jugador_equipo(user3, 1)
-
-sala_jugando.agregar_jugador_equipo(user2, 0)
-sala_jugando.agregar_jugador_equipo(user4, 0)
+sala_jugando.agregar_jugador_equipo(user2, 1)
 
 
-print("equipo 1:",sala_jugando.mostrar_jugadores_equipo(0))
-print("equipo 2:", sala_jugando.mostrar_jugadores_equipo(1))
+print("CARTAS: ", user._username)
+for x , idx in enumerate(user.perform_get_mano()):
+    print(x , idx)
 
-
-
-idx = 0
-
-while sala_jugando.get_equipo(0).puntos_partida < sala_jugando.points_to_win and sala_jugando.get_equipo(1).puntos_partida < sala_jugando.points_to_win:
+print("CARTAS: ", user2._username)
+for x, idx in enumerate(user2.perform_get_mano()):
     
+    print(x, idx)
 
-    while  sala_jugando.get_equipo(0).puntos_subronda < 2 and  sala_jugando.get_equipo(1).puntos_subronda < 2:
-        
-        sala_jugando.recibir_cartas( (user, user.perform_tirar_carta(idx)) )
-        sala_jugando.recibir_cartas( (user2, user2.perform_tirar_carta(idx)) )
-        sala_jugando.recibir_cartas( (user3, user3.perform_tirar_carta(idx)) )
-        sala_jugando.recibir_cartas( (user4, user4.perform_tirar_carta(idx)) )
+for i in range (0,3):
 
-        ganador, carta_ganadora = sala_jugando.get_ronda().get_sub_ronda().get_winner_sub_round()
+    p = int(input("poko: \t"))
+    j = int(input("DESCEREBRADO \t"))
 
-        print("THE WINNER TAKES IT ALL:", ganador, "equipo n°: ", ganador.perform_get_num_equipo(),)
-        print(carta_ganadora)
+    sala_jugando.recibir_cartas( (user, user.perform_tirar_carta(p)) )
+    sala_jugando.recibir_cartas((user2, user2.perform_tirar_carta(j)))
 
-        sala_jugando.get_equipo(ganador.perform_get_num_equipo()).add_puntos_subronda()
+    result = sala_jugando.get_ronda().get_sub_ronda().get_winner_sub_round()
 
-        print("PUNTOS DEL EQUIPO: ", sala_jugando.get_equipo(ganador.perform_get_num_equipo()).nombre , sala_jugando.get_equipo(ganador.perform_get_num_equipo()).puntos_partida, sala_jugando.get_equipo(ganador.perform_get_num_equipo()).puntos_subronda)
+    if type(result) == tuple:
+        print("GANO 1 SOLO :", result[0]._username)
+        sala_jugando.get_equipo(result[0].perform_get_num_equipo()).add_punto_subronda()
+    else:
+        print("EMPATE :V")
+        sala_jugando.get_equipo(0).add_punto_subronda()
+        sala_jugando.get_equipo(1).add_punto_subronda()
 
-        sala_jugando.get_ronda().get_sub_ronda().restore_cartas_jugadas_subronda()
-
-        idx += 1
-
-        print("IDX: ", idx) 
-
-        #print("TESTOSTERONA: ", sala_jugando.get_equipo(0).get_puntos_ronda())
-        #print("TESTOSTERONA: ", sala_jugando.get_equipo(1).get_puntos_ronda())
-
-    if sala_jugando.get_equipo(0).puntos_subronda > sala_jugando.get_equipo(1).puntos_subronda:
-        print("equipo 0 +1")
-        sala_jugando.get_equipo(0).add_puntos_ronda(1)
-    elif sala_jugando.get_equipo(1).puntos_subronda > sala_jugando.get_equipo(0).puntos_subronda:
-        print("equipo 1 +1")
-        sala_jugando.get_equipo(1).add_puntos_ronda(1)
-    
-    print("xd")
-    sala_jugando.get_equipo(0).reset_puntos_ronda()
-    sala_jugando.get_equipo(1).reset_puntos_ronda()
-    idx = 0
-
-    sala_jugando.ronda.banned_cards = []
-    user.obtener_cartas(sala_jugando.ronda.repartir_cartas()) 
-    user2.obtener_cartas(sala_jugando.ronda.repartir_cartas())
-    user3.obtener_cartas(sala_jugando.ronda.repartir_cartas())
-    user4.obtener_cartas(sala_jugando.ronda.repartir_cartas())
-    
-    print("sala_jugando.get_equipo(0).get_puntos_ronda(): ", sala_jugando.get_equipo(0).puntos_partida)
-    print("sala_jugando.get_equipo(1).get_puntos_ronda(): ", sala_jugando.get_equipo(1).puntos_partida)
+    print(sala_jugando.get_ronda().get_winner(sala_jugando.get_equipo(0), sala_jugando.get_equipo(1)))
 
 
-
-if sala_jugando.get_equipo(0).puntos_partida > sala_jugando.get_equipo(1).puntos_partida:
-    print("equipo 0 gano yipi jai jeii")
-elif sala_jugando.get_equipo(1).puntos_partida > sala_jugando.get_equipo(0).puntos_partida:
-    print("equipo 1 gano wiiiii,")
-    
-
-print(sala_jugando.get_equipo(0).nombre  ,sala_jugando.get_equipo(0).puntos_partida)
-print(sala_jugando.get_equipo(1).nombre  ,sala_jugando.get_equipo(1).puntos_partida)
