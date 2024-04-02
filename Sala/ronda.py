@@ -29,12 +29,22 @@ class Ronda:
                 cards_quantity += 1
         return player_cards
     
-    def get_winner():
-        #sacar el winner de la ronda aca, no de las cartas, eso ya lo hacemos en subronda.
-        #aca hay qeu ver quien consiguió máas piuntos en la subronda
-        # aunqeu enrealidad nose si importa mucho pq tambien hay qeu ahcer el TRUCO QUE DE AHÍ SACAS PUNTOS TMB
+    def get_winner(self, equipo1, equipo2):
+
+        if (equipo1.puntos_subronda == 2) and  equipo1.puntos_subronda != equipo2.puntos_subronda:
+            print("Gano el equipo: ", equipo1.__dict__)
+            return equipo1
+        elif (equipo2.puntos_subronda == 2) and  equipo2.puntos_subronda != equipo1.puntos_subronda:
+            print("Gano el equipo: ", equipo2.__dict__)
+            return equipo2
+        elif equipo1.puntos_subronda == 3 and equipo2.puntos_subronda == 3:
+            print("EMPATE")
+            return equipo1, equipo1
+
+        return "No one Wins yet"
         
-        pass
+        
+
 
     def get_sub_ronda(self):
         return self.sub_ronda
