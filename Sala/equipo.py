@@ -9,7 +9,7 @@ class Equipo:
     def add_jugador(self, jugador):
         self._players.append(jugador)
     
-    def add_puntos_subronda(self):
+    def add_punto_subronda(self):
         self._puntos_subronda += 1 
 
     def add_puntos_ronda(self, cantidad_puntos):
