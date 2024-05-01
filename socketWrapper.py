@@ -1,44 +1,37 @@
-from aiohttp import web
+import asyncio
+import aiohttp.web
 import socketio
 import tracemalloc
 
-class SocketWrapper():
-    sio = socketio.AsyncServer(cors_allowed_origins="*")
-    app = web.Application()
-
-    
+class SocketIOApp:
     def __init__(self):
-        self.initialize_server()
-       
-    def get_app(self):
-        return self.app
+        self.sio = socketio.AsyncServer(cors_allowed_origins="*")
+        self.app = aiohttp.web.Application()
+        self.sio.attach(self.app)
 
-    def get_sio(self):
-        return self.sio
+        self.sio.on('connect', self.on_connect)
+        self.sio.on('disconnect', self.on_disconnect)
+        self.sio.on('repartir_cartas', self.repartir_cartas)
 
+    async def on_connect(self, sid, environ):
+        print("El socket:", sid, 'se conectó')
 
-    # NECESESARIOOO
-    def initialize_server(self):
-        self.sio.attach(app)
+    async def on_disconnect(self, sid):
+        print('Desconexión de', sid)
+
+    async def repartir_cartas(self, sid):
+        print("Manejando repartición de cartas!")
+        await self.sio.emit('repartir_cartas', ['011'], to=sid)
+    
+
+    async def run(self):
         tracemalloc.start()
-
-        
-        @self.sio.event
-        def connect(socket_id, _):
-            print('connected', socket_id)
-
-        @self.sio.event
-        def disconnect(sid):
-            print('disconnected ', sid)
-
-        @self.sio.event
-        def repartir_cartas(sid):  
-            self.sio.emit(('repartir_cartas', ['011', '012', '123']))          
-            
-
-
-objetoSocket = SocketWrapper()
-app = objetoSocket.get_app()
+        runner = aiohttp.web.AppRunner(self.app)
+        await runner.setup()
+        site = aiohttp.web.TCPSite(runner, 'localhost', 8080)
+        await site.start()
 
 if __name__ == '__main__':
-    web.run_app(app)
+    socketio_app = SocketIOApp()
+    asyncio.get_event_loop().run_until_complete(socketio_app.run())
+    asyncio.get_event_loop().run_forever()
