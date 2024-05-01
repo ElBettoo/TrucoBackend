@@ -15,7 +15,8 @@ class SocketIOApp:
         self.sio.on('disconnect', self.on_disconnect)
         self.sio.on('repartir_cartas', self.repartir_cartas)
         self.sio.on('on_join_room', self.on_join_room)
-
+        self.sio.on('ping', self.ping)
+        
     async def on_connect(self, sid, environ):
         print("El socket:", sid, 'se conectó')
 
@@ -35,6 +36,10 @@ class SocketIOApp:
         print("sala_room: ", SalaId)
         await self.sio.enter_room(sid, SalaId)
         await self.sio.emit("joined_room")
+
+    async def ping(self,sid):
+        print("ping from: ", sid)
+        await self.sio.emit("ping")
 
     async def run(self):
         tracemalloc.start()
