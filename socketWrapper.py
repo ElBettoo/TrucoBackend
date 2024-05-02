@@ -2,21 +2,42 @@ import asyncio
 import aiohttp.web
 import socketio
 import tracemalloc
-import random
+
+from Sala.Sala import Sala as SalaClass
+from Usuario.Usuario import Usuario
 
 
 class SocketIOApp:
     def __init__(self):
+
+        self.active_rooms = []
+        
         self.sio = socketio.AsyncServer(cors_allowed_origins="*")
         self.app = aiohttp.web.Application()
         self.sio.attach(self.app)
 
+        
         self.sio.on('connect', self.on_connect)
         self.sio.on('disconnect', self.on_disconnect)
         self.sio.on('repartir_cartas', self.repartir_cartas)
         self.sio.on('join_room', self.on_join_room)
         self.sio.on('ping', self.ping)
-        
+    
+    def get_active_rooms(self):
+        return self.active_rooms
+
+    def get_sala(self, SalaId):
+        for sala_i in self.get_active_rooms():
+            if sala_i.get_sala_code() == SalaId:
+                return sala_i
+
+        self.add_active_room(SalaClass(SalaId))
+        return SalaClass(SalaId)
+                
+    def add_active_room(self,sala)-> SalaClass:
+        self.active_rooms.append(sala)
+
+
     async def on_connect(self, sid, environ):
         print("El socket:", sid, 'se conectó')
 
@@ -24,15 +45,23 @@ class SocketIOApp:
         print('Desconexión de', sid)
 
     async def repartir_cartas(self, sid, salaId):
-        print("Manejando repartición de cartas!: ", sid)
-        print("SID: ", sid)
-        print("SalaID: ", salaId)
+      #  print("Manejando repartición de cartas!: ", sid)
+      #  print("SID: ", sid)
+       # print("SalaID: ", salaId)
         await self.sio.emit('repartir_cartas', ['1', 'random.choice(100)', 'random.choice(1312412)'], to=salaId)
 
-    
     async def on_join_room(self,sid,SalaId):
         print("El socket: ", sid, "se unio a la sala_: ", SalaId)
+
+
+        current_sala = self.get_sala(SalaId)
+        current_user = Usuario(sid, "Default_User")
+        current_sala.add_user(current_user)
         
+        print("Current sala: ", current_sala)
+        print("Usuarios de la sala: ", current_sala.get_users())
+        print("Salas totalesa: ", self.active_rooms)
+
         await self.sio.enter_room(sid, SalaId)
         await self.sio.emit("joined_room")
 
@@ -47,10 +76,15 @@ class SocketIOApp:
         site = aiohttp.web.TCPSite(runner, 'localhost', 8080)
         await site.start()
 
+
     
+    
+def run_game(socketApp):
+    asyncio.get_event_loop().run_until_complete(socketApp.run())
+    print("[SERVER] ON")
+    asyncio.get_event_loop().run_forever()
+    pass
 
 if __name__ == '__main__':
     socketio_app = SocketIOApp()
-    asyncio.get_event_loop().run_until_complete(socketio_app.run())
-    print("[SERVER] ON")
-    asyncio.get_event_loop().run_forever()
+    run_game(socketio_app)
