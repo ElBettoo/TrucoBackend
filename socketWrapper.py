@@ -31,8 +31,9 @@ class SocketIOApp:
             if sala_i.get_sala_code() == SalaId:
                 return sala_i
 
-        self.add_active_room(SalaClass(SalaId))
-        return SalaClass(SalaId)
+        nueva_sala = SalaClass(SalaId)
+        self.add_active_room(nueva_sala)
+        return nueva_sala
                 
     def add_active_room(self,sala)-> SalaClass:
         self.active_rooms.append(sala)
