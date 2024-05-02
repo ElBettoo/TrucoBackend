@@ -14,7 +14,7 @@ class SocketIOApp:
         self.sio.on('connect', self.on_connect)
         self.sio.on('disconnect', self.on_disconnect)
         self.sio.on('repartir_cartas', self.repartir_cartas)
-        self.sio.on('on_join_room', self.on_join_room)
+        self.sio.on('join_room', self.on_join_room)
         self.sio.on('ping', self.ping)
         
     async def on_connect(self, sid, environ):
@@ -31,9 +31,8 @@ class SocketIOApp:
 
     
     async def on_join_room(self,sid,SalaId):
-        print("Unido :3: " )
-        print("S_room: ", sid)
-        print("sala_room: ", SalaId)
+        print("El socket: ", sid, "se unio a la sala_: ", SalaId)
+        
         await self.sio.enter_room(sid, SalaId)
         await self.sio.emit("joined_room")
 
