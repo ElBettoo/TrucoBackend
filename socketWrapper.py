@@ -51,20 +51,25 @@ class SocketIOApp:
        # print("SalaID: ", salaId)
         await self.sio.emit('repartir_cartas', ['1', 'random.choice(100)', 'random.choice(1312412)'], to=salaId)
 
-    async def on_join_room(self,sid,SalaId):
-        print("El socket: ", sid, "se unio a la sala_: ", SalaId)
+    async def on_join_room(self,sid,SalaId,Username):
+        print("El usuario: ", Username, "se unio a la sala: ", SalaId)
 
 
         current_sala = self.get_sala(SalaId)
-        current_user = Usuario(sid, "Default_User")
+        current_user = Usuario(sid, Username)
         current_sala.add_user(current_user)
-        
-        print("Current sala: ", current_sala)
+
         print("Usuarios de la sala: ", current_sala.get_users())
         print("Salas totalesa: ", self.active_rooms)
 
         await self.sio.enter_room(sid, SalaId)
         await self.sio.emit("joined_room")
+
+        print('Sala actual tiene:', len(current_sala.get_users()), 'usuarios')
+
+        if len(current_sala.get_users()) >= 2:
+            print("esta caca anda")
+            await self.sio.emit('recibir_jugadores', current_sala.get_usernames(), to=SalaId)
 
     async def ping(self,sid):
         print("ping from: ", sid)

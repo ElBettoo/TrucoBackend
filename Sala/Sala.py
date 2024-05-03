@@ -10,6 +10,13 @@ class Sala:
     def get_users(self):
         return self.usuarios
     
+    def get_usernames(self):
+        lista = []
+        for user in self.get_users():
+            lista.append(user.username)
+
+        return lista
+    
     def get_sala_code(self):
         return self.codigo_sala
     
