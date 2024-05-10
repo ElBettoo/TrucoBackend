@@ -47,9 +47,8 @@ class EventHandler:
         if len(current_sala.get_users()) >= 2:
             await self.socket.emit_to_sala(SalaId, 'recibir_jugadores', current_sala.get_usernames())
 
+            print('Repartiendo cartas para jugadores', current_sala.get_usernames())
             current_sala.mazo.repartir_cartas(current_sala.get_users())
-            print('repartido cartas')
-            #literalmente es un commit 100% al pedo pero para poder quedar como contributor :,v
 
 
     
