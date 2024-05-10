@@ -1,5 +1,6 @@
 class Mano:
     def __init__(self) -> None:
+        #caca en el crebo
         self.cards = []
 
     def set_cards(self,cartas) -> list:
