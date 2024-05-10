@@ -50,5 +50,8 @@ class EventHandler:
             print('Repartiendo cartas para jugadores', current_sala.get_usernames())
             current_sala.mazo.repartir_cartas(current_sala.get_users())
 
+            for user in current_sala.get_users():
+                print(user.mano)
+
 
     

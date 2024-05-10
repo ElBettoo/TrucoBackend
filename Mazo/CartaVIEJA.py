@@ -1,38 +1,40 @@
+from dataclasses import dataclass
+
+@dataclass
 class Carta:
-    def __init__(self, numero, palo, valor) -> None:
-        self.__numero = numero
-        self.__palo = palo
-        self.__valor = valor
+    _primaryKey: str
+    _nombre: str
+    _valor: int
 
-        print(self.key)
+    def __post_init__(self):
+        self._numero = self._primaryKey[:2]
+        self._palo = self._primaryKey[-1]
 
-    
     def __str__(self):
-        return self.nombre
+        return self._nombre
     
     def __gt__(self, other_card_object):
         if isinstance(other_card_object, Carta):
             return self._valor < other_card_object.valor
         else:
             return True
-        
+    
     @property
     def key(self):
-        return f'{self.palo[0]}{str(self.numero).zfill(2)}'
+        return self._primaryKey
 
     @property
     def nombre(self):
-        return f'{self.numero} de {self.palo}'
+        return self._nombre
 
     @property
     def valor(self):
-        return self.__valor
+        return self._valor
     
     @property
     def palo(self):
-        return self.__palo
+        return self._palo
     
     @property
     def numero(self):
-        return self.__numero
-    
+        return self._numero
