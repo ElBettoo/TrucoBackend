@@ -4,3 +4,5 @@ class Usuario:
         self.socketId = socketId
         self.points = 0
         
+    def set_mano(self, nueva_mano):
+        self.mano = nueva_mano

@@ -1,7 +1,6 @@
-from socketWrapper import SocketIOApp, run_game
+from Network.eventHandler import EventHandler
 
-socketio_app = SocketIOApp()
-
-run_game(socketio_app)
+app = EventHandler()
+app.run_game()
 
 
