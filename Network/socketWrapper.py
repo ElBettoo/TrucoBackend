@@ -34,6 +34,9 @@ class SocketIOApp:
     
     async def emit_to_sala(self, salaId, *args):
         await self.sio.emit(*args, to=salaId)
+    
+    async def emit_to_player(self, socketId, *args):
+        await self.sio.emit(*args, to=socketId)
 
     # salas
     def get_active_rooms(self):
