@@ -4,7 +4,7 @@ class Carta:
         self.__palo = palo
         self.__valor = valor
 
-        print(self.key)
+        
 
     
     def __str__(self):

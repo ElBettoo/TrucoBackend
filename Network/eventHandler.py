@@ -21,6 +21,7 @@ class EventHandler:
         self.socket.on_event('disconnect', self.on_disconnect)
         self.socket.on_event('join_room', self.on_join_room)
         self.socket.on_event('repartir_cartas', self.on_repartir_cartas)
+        self.socket.on_event('mostrar_carta_tirada', self.on_mostrar_carta_tirada)
     
 
 
@@ -30,6 +31,19 @@ class EventHandler:
 
     async def on_disconnect(self, sid):
         print('Desconexión de', sid)
+
+    async def on_mostrar_carta_tirada(self,sid, SalaId, carta):
+
+        current_sala = self.socket.get_sala(SalaId)
+        current_sala.add_carta_tirada({sid : carta})
+        
+        cartas_tiradas = (current_sala.cartas_tiradas)
+        
+        await self.socket.emit_to_sala( SalaId, 'mostrar_cartas_repartidas', cartas_tiradas )
+
+
+        
+
 
     async def on_repartir_cartas(self, sid, salaId):
         await self.socket.emit_to_sala(salaId, 'repartir_cartas', ['1', 'random.choice(100)', 'random.choice(1312412)'])
@@ -52,15 +66,12 @@ class EventHandler:
 
             player1 =  current_sala.get_users()[0]
             player2 = current_sala.get_users()[1]
-    
+
             print("Jugador 1:", [player1.get_mano()])
             print("Jugador 2:", [player2.get_mano()])
 
             await self.socket.emit_to_player(player1.get_socket_id(), 'recibir_cartas', player1.get_mano())
             await self.socket.emit_to_player(player2.get_socket_id(), 'recibir_cartas', player2.get_mano())
 
+   
 
-          
-
-
-    
