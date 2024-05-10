@@ -50,8 +50,17 @@ class EventHandler:
             print('Repartiendo cartas para jugadores', current_sala.get_usernames())
             current_sala.mazo.repartir_cartas(current_sala.get_users())
 
-            for user in current_sala.get_users():
-                print(user.mano)
+            player1 =  current_sala.get_users()[0]
+            player2 = current_sala.get_users()[1]
+    
+            print("Jugador 1:", [player1.get_mano()])
+            print("Jugador 2:", [player2.get_mano()])
+
+            await self.socket.emit_to_player(player1.get_socket_id(), 'recibir_cartas', player1.get_mano())
+            await self.socket.emit_to_player(player2.get_socket_id(), 'recibir_cartas', player2.get_mano())
+
+
+          
 
 
     
