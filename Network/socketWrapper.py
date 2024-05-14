@@ -10,14 +10,12 @@ class SocketIOApp:
     def __init__(self):
 
         self.active_rooms = []
+        self.connected_users = []
+        self.__connected_sockets = []
         
         self.sio = socketio.AsyncServer(cors_allowed_origins="*")
         self.app = aiohttp.web.Application()
         self.sio.attach(self.app)
-        
-    async def ping(self,sid):
-        print("ping from: ", sid)
-        await self.sio.emit("ping")
 
     async def run(self):
         tracemalloc.start()
@@ -37,6 +35,31 @@ class SocketIOApp:
     
     async def emit_to_player(self, socketId, *args):
         await self.sio.emit(*args, to=socketId)
+
+    # sockets
+    @property
+    def connected_sockets(self):
+        return self.__connected_sockets
+    
+    def add_user_socket(self, user):
+        self.connected_sockets.append(user)
+
+    def get_user_socket_by_socket_id(self, sid):
+        for user_socket in self.connected_sockets:
+            if user_socket.socket_id == sid:
+                return user_socket
+
+
+    def remove_user_socket(self, user):
+        self.connected_sockets.remove(user)
+
+    # usuarios
+    def add_connected_user(self, sid):
+        user_object = Usuario(sid)
+        self.connected_users.append(user_object)
+        
+    def remove_connected_user(self, user):
+        self.connected_users.remove(user)
 
     # salas
     def get_active_rooms(self) -> SalaClass:

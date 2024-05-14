@@ -2,11 +2,14 @@ import asyncio
 from Network.socketWrapper import SocketIOApp
 from Usuario.Usuario import Usuario
 from Mazo.Mazo import Mazo
+from Usuario.UserSocket import UserSocket
 
 class EventHandler:
     def __init__(self) -> None:
         self.socket = SocketIOApp()
 
+    def get_socket(self):
+        return self.socket
 
     # METODOS
     def run_game(self):
@@ -27,9 +30,13 @@ class EventHandler:
 
     # EVENTOS
     async def on_connect(self, sid, environ):
+        new_user_socket = UserSocket(sid)
+        self.socket.add_user_socket(new_user_socket)
+
         print("El socket:", sid, 'se conectó')
 
     async def on_disconnect(self, sid):
+
         for sala in self.socket.get_active_rooms():
             for usuario in sala.users:
                 if usuario.socket_id == sid:
@@ -54,15 +61,14 @@ class EventHandler:
         
         await self.socket.emit_to_sala( SalaId, 'mostrar_cartas_repartidas', cartas_tiradas)
 
-    async def on_repartir_cartas(self, sid, salaId):
-        await self.socket.emit_to_sala(salaId, 'repartir_cartas', ['1', 'random.choice(100)', 'random.choice(1312412)'])
 
     async def on_join_room(self,sid,SalaId,Username):
-        #print("El usuario: ", Username, "se unio a la sala: ", SalaId)
 
         current_sala = self.socket.get_sala(SalaId)
-        current_user = Usuario(sid, Username) # es 0 o es 1 :v
+        user_socket = self.socket.get_user_socket_by_socket_id(sid)
+        current_user = Usuario(user_socket, Username)
         current_sala.add_user(current_user)
+
 
         await self.socket.sio.enter_room(sid, SalaId)
         await self.socket.emit_to_player(sid, 'join_room')

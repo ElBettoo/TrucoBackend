@@ -1,9 +1,11 @@
 class Usuario:
-    def __init__(self, socket_id, username) -> None:
+    def __init__(self, user_socket, username="juanitrox") -> None:
         self.__username = username
-        self.__socket_id = socket_id
+        self.__user_socket = user_socket
         self.__team = None
         self.mano = None
+        
+        
         
     def set_mano(self, nueva_mano):
         self.mano = nueva_mano
@@ -34,4 +36,4 @@ class Usuario:
     
     @property
     def socket_id(self):
-        return self.__socket_id
+        return self.__user_socket.socket_id
