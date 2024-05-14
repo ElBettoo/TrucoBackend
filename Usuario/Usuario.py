@@ -1,8 +1,8 @@
 class Usuario:
-    def __init__(self, socketId, username ) -> None:
-        self.username = username
-        self.socketId = socketId
-        self.points = 0
+    def __init__(self, socket_id, username) -> None:
+        self.__username = username
+        self.__socket_id = socket_id
+        self.__team = None
         self.mano = None
         
     def set_mano(self, nueva_mano):
@@ -17,4 +17,21 @@ class Usuario:
     
     
     def get_socket_id(self):
-        return self.socketId
+        return self.socket_id
+    
+
+    @property
+    def team(self):
+        return self.__team
+    
+    @team.setter
+    def team(self, new_team):
+        self.__team = new_team
+
+    @property
+    def username(self):
+        return self.__username
+    
+    @property
+    def socket_id(self):
+        return self.__socket_id

@@ -39,12 +39,12 @@ class SocketIOApp:
         await self.sio.emit(*args, to=socketId)
 
     # salas
-    def get_active_rooms(self):
+    def get_active_rooms(self) -> SalaClass:
         return self.active_rooms
 
     def get_sala(self, SalaId):
         for sala_i in self.get_active_rooms():
-            if sala_i.get_sala_code() == SalaId:
+            if sala_i.codigo_sala == SalaId:
                 return sala_i
 
         nueva_sala = SalaClass(SalaId)
