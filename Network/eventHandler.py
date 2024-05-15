@@ -23,8 +23,7 @@ class EventHandler:
         self.socket.on_event('connect', self.on_connect)
         self.socket.on_event('disconnect', self.on_disconnect)
         self.socket.on_event('join_room', self.on_join_room)
-        self.socket.on_event('repartir_cartas', self.on_repartir_cartas)
-        self.socket.on_event('mostrar_carta_tirada', self.on_mostrar_carta_tirada)
+        self.socket.on_event('tirar_carta', self.on_tirar_carta)
     
 
 
@@ -45,10 +44,10 @@ class EventHandler:
                     
                     break
 
-    async def on_mostrar_carta_tirada(self,sid, SalaId, carta):
+    async def on_tirar_carta(self,sid, SalaId, carta):
         current_sala = self.socket.get_sala(SalaId)
         for user in current_sala.users:
-            if user.socket_id == sid:
+            if user.socket_id == sid: #Bien jugado sid 😀
                 break
 
         #current_sala.add_carta_tirada({username: carta})
@@ -76,16 +75,11 @@ class EventHandler:
         if len(current_sala.users) >= 2:
             await self.socket.emit_to_sala(SalaId, 'recibir_jugadores', current_sala.get_usernames())
 
-            current_sala.mazo.repartir_cartas(current_sala.users)
+            current_sala.ronda.repartir_cartas()
 
-            player1 =  current_sala.users[0]
-            player2 = current_sala.users[1]
+            for user in current_sala.users:
+                await self.socket.emit_to_player(user.get_socket_id(), 'recibir_cartas', user.get_mano())
 
-            print("Jugador 1:", player1.team, [player1.get_mano()])
-            print("Jugador 2:", player2.team, [player2.get_mano()])
-
-            await self.socket.emit_to_player(player1.get_socket_id(), 'recibir_cartas', player1.get_mano())
-            await self.socket.emit_to_player(player2.get_socket_id(), 'recibir_cartas', player2.get_mano())
 
    
 

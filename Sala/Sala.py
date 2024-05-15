@@ -1,13 +1,15 @@
 from Mazo.Mazo import Mazo
 from Usuario.Team import Team
+from Ronda.Ronda import Ronda
 
 class Sala:
     def __init__(self, codigo_sala) :
 
         self.__codigo_sala = codigo_sala
-        self.__usuarios = []
+        self.__users = []
         self.__mazo = Mazo()
         self.__cartas_tiradas = []
+        self.__ronda = Ronda(self.mazo, self.users)
         self.__teams = [Team(1), Team(2)]
     
     def add_carta_tirada(self,cartaByUser):
@@ -25,14 +27,21 @@ class Sala:
     def remove_user(self, jugador):
         self.users.remove(jugador)
 
-    def reset_mazo(self):
-        self.mazo = Mazo()
-
     def get_usernames(self):
         lista = []
         for user in self.users:
             lista.append(user.username)
         return lista
+
+    def switch_round(self):
+        self.mazo.reset()
+
+        self.__ronda = Ronda(self.mazo)
+
+
+    @property
+    def ronda(self):
+        return self.__ronda
 
     @property
     def cartas_tiradas(self):
@@ -44,7 +53,7 @@ class Sala:
 
     @property
     def users(self):
-        return self.__usuarios
+        return self.__users
     
     @property
     def teams(self):

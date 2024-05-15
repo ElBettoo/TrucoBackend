@@ -7,7 +7,8 @@ especial = {'1espada':1, '1basto':2, '7espada':3, '7oro':4}
 
 class Mazo:
     def __init__(self):
-        self.mazo = []
+        self.__mazo = []
+        self.__banned_cards = []
 
         for num in range(1, 13):
             if num == 8 or num == 9:
@@ -21,6 +22,7 @@ class Mazo:
 
                 self.mazo.append(Carta(num, palo, valor_carta))
 
+
     def repartir_cartas(self, jugadores):
         for jugador in jugadores:
             nueva_mano = Mano(self.get_mano())
@@ -30,9 +32,22 @@ class Mazo:
         cartas = []
         for i in range(3):
             carta_elegida = random.choice(self.mazo)
+            while carta_elegida in self.banned_cards:
+                carta_elegida = random.choice(self.mazo)
 
             cartas.append(carta_elegida)
-            self.mazo.pop(self.mazo.index(carta_elegida))
+            self.banned_cards.append(carta_elegida)
 
-        return cartas
+        return Mano(cartas)
+    
+    def reset(self):
+        self.banned_cards = []
+
+    @property
+    def mazo(self):
+        return self.__mazo
+
+    @property
+    def banned_cards(self):
+        return self.__banned_cards
         
