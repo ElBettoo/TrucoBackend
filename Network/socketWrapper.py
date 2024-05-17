@@ -24,6 +24,13 @@ class SocketIOApp:
         site = aiohttp.web.TCPSite(runner, 'localhost', 8080)
         await site.start()
 
+    def get_room_by_sid(self, sid): # Los juguetes lo ven todo
+        for sala in self.get_active_rooms():
+            for usuario in sala.users:
+                if usuario.socket_id == sid:
+                    print("RTX ASMKDKASKDMASMK: ", sala.codigo_sala, sala.users)
+                    return sala
+
     def on_event(self, *args):
         self.sio.on(*args)
 

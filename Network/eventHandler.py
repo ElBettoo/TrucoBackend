@@ -24,6 +24,8 @@ class EventHandler:
         self.socket.on_event('disconnect', self.on_disconnect)
         self.socket.on_event('join_room', self.on_join_room)
         self.socket.on_event('tirar_carta', self.on_tirar_carta)
+        self.socket.on_event('leave_room', self.on_leave_room)
+        self.socket.on_event('update_points', self.on_update_points)
     
 
 
@@ -36,13 +38,7 @@ class EventHandler:
 
     async def on_disconnect(self, sid):
 
-        for sala in self.socket.get_active_rooms():
-            for usuario in sala.users:
-                if usuario.socket_id == sid:
-                    sala.remove_user(usuario)
-                    await self.socket.emit_to_sala(sala.codigo_sala, 'recibir_jugadores', sala.get_usernames())
-                    
-                    break
+        await self.on_leave_room(sid)
 
     async def on_tirar_carta(self,sid, SalaId, carta):
         current_sala = self.socket.get_sala(SalaId)
@@ -54,18 +50,36 @@ class EventHandler:
         current_sala.add_carta_tirada([user.username, carta, user.team.id])
         
         cartas_tiradas = (current_sala.cartas_tiradas)
-
-        print('NIGGA PORKY KILL YOUR SELF')
         print(cartas_tiradas)
         
         await self.socket.emit_to_sala( SalaId, 'mostrar_cartas_repartidas', cartas_tiradas)
 
+    async def on_update_points(self,sid, team_id, points):
+
+        current_sala = self.socket.get_room_by_sid(sid)
+        
+        
+        await self.socket.emit_to_sala(current_sala.codigo_sala, 'update_points',team_id, points)
+            
+    
+    async def on_leave_room(self, sid):
+        current_sala = self.socket.get_room_by_sid(sid)
+
+        if current_sala != None:
+            user_socket = self.socket.get_user_socket_by_socket_id(sid)
+            current_sala.remove_user(user_socket.user)
+
+
+        print(f"USER: [{user_socket.user.username}] SOCKET: [{user_socket.socket_id}] se desconecto. Bien jugado sid")
+
+
 
     async def on_join_room(self,sid,SalaId,Username):
-
         current_sala = self.socket.get_sala(SalaId)
         user_socket = self.socket.get_user_socket_by_socket_id(sid)
         current_user = Usuario(user_socket, Username)
+        user_socket.assign_user(current_user)
+
         current_sala.add_user(current_user)
 
 
