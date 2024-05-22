@@ -28,7 +28,7 @@ class SocketIOApp:
         for sala in self.get_active_rooms():
             for usuario in sala.users:
                 if usuario.socket_id == sid:
-                    print("RTX ASMKDKASKDMASMK: ", sala.codigo_sala, sala.users)
+                    # print("RTX ASMKDKASKDMASMK: ", sala.codigo_sala, sala.users)
                     return sala
 
     def on_event(self, *args):
@@ -38,10 +38,28 @@ class SocketIOApp:
         await self.sio.emit(*args)
     
     async def emit_to_sala(self, salaId, *args):
-        await self.sio.emit(*args, to=salaId)
+        event = args[0]
+        event_data = []
+
+        for x in args:
+            if x == event:
+                continue
+            
+            event_data.append(x)
+
+        await self.sio.emit(to=salaId, event=event, data=event_data)
     
     async def emit_to_player(self, socketId, *args):
-        await self.sio.emit(*args, to=socketId)
+        event = args[0]
+        event_data = []
+
+        for x in args:
+            if x == event:
+                continue
+            
+            event_data.append(x)
+
+        await self.sio.emit(to=socketId, event=event, data=event_data)
 
     # sockets
     @property
@@ -74,6 +92,7 @@ class SocketIOApp:
 
     def get_sala(self, SalaId):
         for sala_i in self.get_active_rooms():
+            print("sala ID ACA: ", SalaId)
             if sala_i.codigo_sala == SalaId:
                 return sala_i
 

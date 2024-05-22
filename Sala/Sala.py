@@ -36,7 +36,8 @@ class Sala:
     def switch_round(self):
         self.mazo.reset()
 
-        self.__ronda = Ronda(self.mazo)
+        self.cartas_tiradas = []
+        self.__ronda = Ronda(self.mazo, self.users)
 
 
     @property
@@ -46,6 +47,10 @@ class Sala:
     @property
     def cartas_tiradas(self):
         return self.__cartas_tiradas
+    
+    @cartas_tiradas.setter
+    def cartas_tiradas(self, new_value):
+        self.__cartas_tiradas = new_value
 
     @property
     def mazo(self):

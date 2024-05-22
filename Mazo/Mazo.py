@@ -50,4 +50,8 @@ class Mazo:
     @property
     def banned_cards(self):
         return self.__banned_cards
+    
+    @banned_cards.setter
+    def banned_cards(self, new_cards):
+        self.__banned_cards = new_cards
         

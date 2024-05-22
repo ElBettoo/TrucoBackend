@@ -26,6 +26,7 @@ class EventHandler:
         self.socket.on_event('tirar_carta', self.on_tirar_carta)
         self.socket.on_event('leave_room', self.on_leave_room)
         self.socket.on_event('update_points', self.on_update_points)
+        self.socket.on_event('switch_round', self.on_switch_round)
     
 
 
@@ -54,12 +55,10 @@ class EventHandler:
         
         await self.socket.emit_to_sala( SalaId, 'mostrar_cartas_repartidas', cartas_tiradas)
 
-    async def on_update_points(self,sid, team_id, points):
+    async def on_update_points(self,sid,team_id, type):
 
         current_sala = self.socket.get_room_by_sid(sid)
-        
-        
-        await self.socket.emit_to_sala(current_sala.codigo_sala, 'update_points',team_id, points)
+        await self.socket.emit_to_sala(current_sala.codigo_sala, 'update_points', team_id, type)
             
     
     async def on_leave_room(self, sid):
@@ -72,9 +71,17 @@ class EventHandler:
 
         print(f"USER: [{user_socket.user.username}] SOCKET: [{user_socket.socket_id}] se desconecto. Bien jugado sid")
 
+    async def on_switch_round(self, sid):
+        sala = self.socket.get_room_by_sid(sid)
+        sala.switch_round()
+        sala.ronda.repartir_cartas()
+
+        for user in sala.users:
+                await self.socket.emit_to_player(user.get_socket_id(), 'recibir_cartas', user.get_mano())
 
 
     async def on_join_room(self,sid,SalaId,Username):
+
         current_sala = self.socket.get_sala(SalaId)
         user_socket = self.socket.get_user_socket_by_socket_id(sid)
         current_user = Usuario(user_socket, Username)
@@ -89,6 +96,7 @@ class EventHandler:
         if len(current_sala.users) >= 2:
             await self.socket.emit_to_sala(SalaId, 'recibir_jugadores', current_sala.get_usernames())
 
+            current_sala.switch_round()
             current_sala.ronda.repartir_cartas()
 
             for user in current_sala.users:
