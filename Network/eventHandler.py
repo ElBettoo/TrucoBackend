@@ -67,6 +67,8 @@ class EventHandler:
         if current_sala != None:
             user_socket = self.socket.get_user_socket_by_socket_id(sid)
             current_sala.remove_user(user_socket.user)
+        
+        print("current_sala: ", current_sala)
 
 
         print(f"USER: [{user_socket.user.username}] SOCKET: [{user_socket.socket_id}] se desconecto. Bien jugado sid")
@@ -86,17 +88,15 @@ class EventHandler:
         user_socket = self.socket.get_user_socket_by_socket_id(sid)
         current_user = Usuario(user_socket, Username)
         user_socket.assign_user(current_user)
-
         current_sala.add_user(current_user)
-
 
         await self.socket.sio.enter_room(sid, SalaId)
         await self.socket.emit_to_player(sid, 'join_room')
+        await self.socket.emit_to_sala(SalaId, 'recibir_jugadores', current_sala.get_usernames())
 
-        if len(current_sala.users) >= 2:
-            await self.socket.emit_to_sala(SalaId, 'recibir_jugadores', current_sala.get_usernames())
-
-            current_sala.switch_round()
+        if current_sala.cantidad_jugadores >= 2:
+            
+            current_sala.start()
             current_sala.ronda.repartir_cartas()
 
             for user in current_sala.users:

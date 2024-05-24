@@ -9,23 +9,34 @@ class Sala:
         self.__users = []
         self.__mazo = Mazo()
         self.__cartas_tiradas = []
-        self.__ronda = Ronda(self.mazo, self.users)
         self.__teams = [Team(1), Team(2)]
-    
+        self.__cantidad_jugadores = 0
+        self.__tamaño_sala = 2
+        self.__ronda = Ronda(self.mazo, self.users, self.teams)
+
     def add_carta_tirada(self,cartaByUser):
         self.cartas_tiradas.append(cartaByUser)
 
+    def start(self):
+        if self.__tamaño_sala == len(self.users):
+            self.create_new_round()
+
     def add_user(self, jugador):
+        if self.cantidad_jugadores + 1 > self.__tamaño_sala:
+            return
+
         team_index = (len(self.users)+1) % 2
         jugador.team =  self.teams[team_index]
 
         self.users.append(jugador)
         self.teams[team_index].add_player(jugador)
+        self.cantidad_jugadores += 1
 
         print(self.teams[team_index].players)
 
     def remove_user(self, User): # remove_user(sid=234234)
         self.users.remove(User)
+        self.cantidad_jugadores -= 1
 
     def get_usernames(self):
         lista = []
@@ -33,11 +44,18 @@ class Sala:
             lista.append(user.username)
         return lista
 
-    def switch_round(self):
+    def create_new_round(self):
         self.mazo.reset()
-
         self.cartas_tiradas = []
-        self.__ronda = Ronda(self.mazo, self.users)
+        self.__ronda = Ronda(self.mazo, self.users, self.teams)
+
+    @property
+    def cantidad_jugadores(self):
+        return self.__cantidad_jugadores
+    
+    @cantidad_jugadores.setter
+    def cantidad_jugadores(self, nueva_cantidad):
+        self.__cantidad_jugadores = nueva_cantidad
 
 
     @property
