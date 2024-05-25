@@ -21,6 +21,9 @@ class Usuario:
     def get_socket_id(self):
         return self.socket_id
     
+    def tirar_carta(self, carta_tirada):
+        self.get_mano.remove_card(carta_tirada)
+        
 
     @property
     def team(self):

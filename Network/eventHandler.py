@@ -1,12 +1,12 @@
 import asyncio
-from Network.socketWrapper import SocketIOApp
+from Network.socketWrapper import WRAPPER
 from Usuario.Usuario import Usuario
 from Mazo.Mazo import Mazo
 from Usuario.UserSocket import UserSocket
 
 class EventHandler:
     def __init__(self) -> None:
-        self.socket = SocketIOApp()
+        self.socket = WRAPPER
 
     def get_socket(self):
         return self.socket
@@ -27,9 +27,8 @@ class EventHandler:
         self.socket.on_event('leave_room', self.on_leave_room)
         self.socket.on_event('update_points', self.on_update_points)
         self.socket.on_event('switch_round', self.on_switch_round)
+        self.socket.on_event('start_game', self.on_start_game)
     
-
-
     # EVENTOS
     async def on_connect(self, sid, environ):
         new_user_socket = UserSocket(sid)
@@ -48,11 +47,13 @@ class EventHandler:
                 break
 
         #current_sala.add_carta_tirada({username: carta})
-        current_sala.add_carta_tirada([user.username, carta, user.team.id])
-        
-        cartas_tiradas = (current_sala.cartas_tiradas)
+        current_sala.ronda.subronda.add_carta_tirada([user.username, carta, user.team.id])
+
+        cartas_tiradas = current_sala.ronda.get_all_cartas_tiradas()
+
         print(cartas_tiradas)
         
+
         await self.socket.emit_to_sala( SalaId, 'mostrar_cartas_repartidas', cartas_tiradas)
 
     async def on_update_points(self,sid,team_id, type):
@@ -75,8 +76,8 @@ class EventHandler:
 
     async def on_switch_round(self, sid):
         sala = self.socket.get_room_by_sid(sid)
-        sala.switch_round()
-        sala.ronda.repartir_cartas()
+        sala.create_new_round()
+        
 
         for user in sala.users:
                 await self.socket.emit_to_player(user.get_socket_id(), 'recibir_cartas', user.get_mano())
@@ -94,14 +95,14 @@ class EventHandler:
         await self.socket.emit_to_player(sid, 'join_room')
         await self.socket.emit_to_sala(SalaId, 'recibir_jugadores', current_sala.get_usernames())
 
-        if current_sala.cantidad_jugadores >= 2:
-            
+    async def on_start_game(self, sid, state):
+        current_sala = self.socket.get_room_by_sid(sid)
+        current_sala.users_ready += 1 if state else -1
+        print(current_sala.users_ready)
+
+        if current_sala.users_ready == current_sala.tamaño_sala:
             current_sala.start()
-            current_sala.ronda.repartir_cartas()
-
+            
             for user in current_sala.users:
-                await self.socket.emit_to_player(user.get_socket_id(), 'recibir_cartas', user.get_mano())
-
-
-   
+                    await self.socket.emit_to_player(user.get_socket_id(), 'recibir_cartas', user.get_mano())
 

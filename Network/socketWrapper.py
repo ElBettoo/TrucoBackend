@@ -102,3 +102,5 @@ class SocketIOApp:
                 
     def add_active_room(self,sala)-> SalaClass:
         self.active_rooms.append(sala)
+
+WRAPPER = SocketIOApp()

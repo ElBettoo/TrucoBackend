@@ -7,11 +7,16 @@ class Ronda:
         self.__users = users
         self.__teams = teams
         self.__current_subronda = SubRonda(self.intercalate_users_by_team())
+        self.__all_subrondas = [self.__current_subronda]
 
     def repartir_cartas(self):
         for user in self.users:
             chosen_cards = self.mazo.get_mano() 
             user.set_mano(chosen_cards)
+
+    def add_carta_tirada(self, card):
+        self.all_subrondas.append(card)
+        self.subronda.add_carta_tirada(card)
 
     def intercalate_users_by_team(self):
         
@@ -39,3 +44,9 @@ class Ronda:
     @property
     def teams(self):
         return self.__teams
+    
+    @property
+
+    @property
+    def sub_ronda(self):
+        return self.__current_subronda

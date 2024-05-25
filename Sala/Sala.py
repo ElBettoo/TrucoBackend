@@ -11,15 +11,17 @@ class Sala:
         self.__cartas_tiradas = []
         self.__teams = [Team(1), Team(2)]
         self.__cantidad_jugadores = 0
-        self.__tamaño_sala = 2
+        self.__tamaño_sala = 4
+        self.__users_ready = 0
         self.__ronda = Ronda(self.mazo, self.users, self.teams)
-
-    def add_carta_tirada(self,cartaByUser):
-        self.cartas_tiradas.append(cartaByUser)
+        self.__started = False
 
     def start(self):
+    
         if self.__tamaño_sala == len(self.users):
             self.create_new_round()
+            self.started = True
+            
 
     def add_user(self, jugador):
         if self.cantidad_jugadores + 1 > self.__tamaño_sala:
@@ -45,9 +47,11 @@ class Sala:
         return lista
 
     def create_new_round(self):
-        self.mazo.reset()
-        self.cartas_tiradas = []
-        self.__ronda = Ronda(self.mazo, self.users, self.teams)
+        if self.started:
+            self.mazo.reset()
+            self.cartas_tiradas = []
+            self.__ronda = Ronda(self.mazo, self.users, self.teams)
+            self.ronda.repartir_cartas()
 
     @property
     def cantidad_jugadores(self):
@@ -89,3 +93,23 @@ class Sala:
     @codigo_sala.setter
     def codigo_sala(self, new_code):
         self.__codigo_sala = new_code
+
+    @property
+    def users_ready(self):
+        return self.__users_ready
+    
+    @users_ready.setter
+    def users_ready(self, nuevo_valor):
+        self.__users_ready = nuevo_valor
+
+    @property
+    def started(self):
+        return self.__started
+    
+    @started.setter
+    def started(self, newState):
+        self.__started = newState
+
+    @property
+    def tamaño_sala(self):
+        return self.__tamaño_sala
