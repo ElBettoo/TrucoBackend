@@ -11,8 +11,17 @@ class Ronda:
 
     def repartir_cartas(self):
         for user in self.users:
-            chosen_cards = self.mazo.get_mano() 
+            chosen_cards = self.mazo.get_mano()
             user.set_mano(chosen_cards)
+
+
+    def get_all_cartas_tiradas(self): 
+        all_cards = []
+        for subronda in self.all_subrondas:
+            all_cards.append(subronda.cartas_tiradas)
+            print("toilet ", subronda.cartas_tiradas)
+        
+        return all_cards
 
     def add_carta_tirada(self, card):
         self.all_subrondas.append(card)
@@ -28,7 +37,6 @@ class Ronda:
         for user_pair_index in range(len(team1_users)):
             sorted_users.append(team1_users[user_pair_index])
             sorted_users.append(team2_users[user_pair_index])
-            print("sorted", sorted_users)
 
 
         return sorted_users
@@ -44,9 +52,11 @@ class Ronda:
     @property
     def teams(self):
         return self.__teams
-    
-    @property
 
     @property
-    def sub_ronda(self):
+    def subronda(self):
         return self.__current_subronda
+    
+    @property
+    def all_subrondas(self):
+        return self.__all_subrondas

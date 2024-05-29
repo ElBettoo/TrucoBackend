@@ -47,11 +47,11 @@ class EventHandler:
                 break
 
         #current_sala.add_carta_tirada({username: carta})
-        current_sala.ronda.subronda.add_carta_tirada([user.username, carta, user.team.id])
+        current_sala.ronda.subronda.add_carta_tirada(carta, user.username, user.team.id)
 
         cartas_tiradas = current_sala.ronda.get_all_cartas_tiradas()
 
-        print(cartas_tiradas)
+        print("cartas turadas : ",  cartas_tiradas)
         
 
         await self.socket.emit_to_sala( SalaId, 'mostrar_cartas_repartidas', cartas_tiradas)

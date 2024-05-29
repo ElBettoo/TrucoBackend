@@ -11,7 +11,7 @@ class Sala:
         self.__cartas_tiradas = []
         self.__teams = [Team(1), Team(2)]
         self.__cantidad_jugadores = 0
-        self.__tamaño_sala = 4
+        self.__tamaño_sala = 2
         self.__users_ready = 0
         self.__ronda = Ronda(self.mazo, self.users, self.teams)
         self.__started = False
@@ -19,8 +19,8 @@ class Sala:
     def start(self):
     
         if self.__tamaño_sala == len(self.users):
-            self.create_new_round()
             self.started = True
+            self.create_new_round()
             
 
     def add_user(self, jugador):

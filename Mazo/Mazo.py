@@ -23,11 +23,6 @@ class Mazo:
                 self.mazo.append(Carta(num, palo, valor_carta))
 
 
-    def repartir_cartas(self, jugadores):
-        for jugador in jugadores:
-            nueva_mano = Mano(self.get_mano())
-            jugador.set_mano(nueva_mano)
-
     def get_mano(self):
         cartas = []
         for i in range(3):
