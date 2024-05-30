@@ -49,7 +49,7 @@ class EventHandler:
         #current_sala.add_carta_tirada({username: carta})
         current_sala.ronda.subronda.add_carta_tirada(carta, user.username, user.team.id)
 
-        cartas_tiradas = current_sala.ronda.get_all_cartas_tiradas()
+        cartas_tiradas = current_sala.ronda.get_all_cartas_tiradas()[0]
 
         print("cartas turadas : ",  cartas_tiradas)
         
@@ -98,7 +98,7 @@ class EventHandler:
     async def on_start_game(self, sid, state):
         current_sala = self.socket.get_room_by_sid(sid)
         current_sala.users_ready += 1 if state else -1
-        print(current_sala.users_ready)
+        print("users ready: ", current_sala.users_ready)
 
         if current_sala.users_ready == current_sala.tamaño_sala:
             current_sala.start()

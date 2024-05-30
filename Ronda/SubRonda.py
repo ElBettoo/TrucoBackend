@@ -13,14 +13,6 @@ class SubRonda:
         pass
 
 
-
-
-
-
-
-
-
-
     @property
     def registro_cartas_tiradas(self):
         return self.__registro_cartas_tiradas

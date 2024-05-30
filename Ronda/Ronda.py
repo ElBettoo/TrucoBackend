@@ -18,8 +18,8 @@ class Ronda:
     def get_all_cartas_tiradas(self): 
         all_cards = []
         for subronda in self.all_subrondas:
-            all_cards.append(subronda.cartas_tiradas)
-            print("toilet ", subronda.cartas_tiradas)
+            all_cards.append(subronda.registro_cartas_tiradas)
+            print("toilet ", subronda.registro_cartas_tiradas)
         
         return all_cards
 
