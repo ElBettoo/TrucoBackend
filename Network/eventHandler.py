@@ -40,7 +40,7 @@ class EventHandler:
         await self.on_leave_room(sid)
 
     async def on_tirar_carta(self,sid, SalaId, carta):
-        current_sala = self.socket.get_sala(SalaId)
+        current_sala = self.socket.sala_wrapper.get_sala(SalaId)
         for user in current_sala.users:
             if user.socket_id == sid: #Bien jugado sid 😀
                 break
@@ -56,12 +56,12 @@ class EventHandler:
 
     async def on_update_points(self,sid,team_id, type):
 
-        current_sala = self.socket.get_room_by_sid(sid)
+        current_sala = self.socket.sala_wrapper.get_room_by_sid(sid)
         await self.socket.emit_to_sala(current_sala.codigo_sala, 'update_points', team_id, type)
             
     
     async def on_leave_room(self, sid):
-        current_sala = self.socket.get_room_by_sid(sid)
+        current_sala = self.socket.sala_wrapper.get_room_by_sid(sid)
 
         if current_sala != None:
             user_socket = self.socket.get_user_socket_by_socket_id(sid)
@@ -73,7 +73,7 @@ class EventHandler:
         print(f"USER: [{user_socket.user.username}] SOCKET: [{user_socket.socket_id}] se desconecto. Bien jugado sid")
 
     async def on_switch_round(self, sid):
-        sala = self.socket.get_room_by_sid(sid)
+        sala = self.socket.sala_wrapper.get_room_by_sid(sid)
         sala.create_new_round()
         
 
@@ -83,7 +83,8 @@ class EventHandler:
 
     async def on_join_room(self,sid,SalaId,Username):
 
-        current_sala = self.socket.get_sala(SalaId)
+        current_sala = self.socket.sala_wrapper.get_sala(SalaId)
+
         user_socket = self.socket.get_user_socket_by_socket_id(sid)
         current_user = Usuario(user_socket, Username)
         user_socket.assign_user(current_user)
@@ -94,7 +95,7 @@ class EventHandler:
         await self.socket.emit_to_sala(SalaId, 'recibir_jugadores', current_sala.get_usernames())
 
     async def on_start_game(self, sid, state):
-        current_sala = self.socket.get_room_by_sid(sid)
+        current_sala = self.socket.sala_wrapper.get_room_by_sid(sid)
         current_sala.users_ready += 1 if state else -1
         
         print("users ready: ", current_sala.users_ready)
