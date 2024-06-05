@@ -32,11 +32,14 @@ class EventHandler:
     # EVENTOS
     async def on_connect(self, sid, environ):
         new_user_socket = UserSocket(sid)
-        self.socket.add_user_socket(new_user_socket)
-
+        self.socket.sockets_connected_wrapper.add_user_socket(new_user_socket)
+        
+        print("Conected users: ", self.socket.users_connected_wrapper.connected_users)
+        print("Connected sockets: ", self.socket.sockets_connected_wrapper.connected_sockets)
         print("El socket:", sid, 'se conectó')
 
     async def on_disconnect(self, sid):
+        self.socket.sockets_connected_wrapper.remove_user_socket(sid)
         await self.on_leave_room(sid)
 
     async def on_tirar_carta(self,sid, SalaId, carta):
@@ -64,13 +67,17 @@ class EventHandler:
         current_sala = self.socket.sala_wrapper.get_room_by_sid(sid)
 
         if current_sala != None:
-            user_socket = self.socket.get_user_socket_by_socket_id(sid)
+            user_socket = self.socket.sockets_connected_wrapper.get_user_socket_by_socket_id(sid)
             current_sala.remove_user(user_socket.user)
+
+            print("user_socket", user_socket)
+
+            self.socket.users_connected_wrapper.remove_connected_user(sid) 
         
         print("current_sala: ", current_sala)
 
 
-        print(f"USER: [{user_socket.user.username}] SOCKET: [{user_socket.socket_id}] se desconecto. Bien jugado sid")
+        #print(f"USER: [{user_socket.user.username}] SOCKET: [{user_socket.socket_id}] se desconecto. Bien jugado sid")
 
     async def on_switch_round(self, sid):
         sala = self.socket.sala_wrapper.get_room_by_sid(sid)
@@ -85,7 +92,10 @@ class EventHandler:
 
         current_sala = self.socket.sala_wrapper.get_sala(SalaId)
 
-        user_socket = self.socket.get_user_socket_by_socket_id(sid)
+        user_socket = self.socket.sockets_connected_wrapper.get_user_socket_by_socket_id(sid)
+        
+        self.socket.users_connected_wrapper.add_connected_user(user_socket, Username) # Esto no existia y no podias ver los usuarios conectados :V
+
         current_user = Usuario(user_socket, Username)
         user_socket.assign_user(current_user)
         current_sala.add_user(current_user)
