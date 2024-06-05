@@ -37,7 +37,6 @@ class EventHandler:
         print("El socket:", sid, 'se conectó')
 
     async def on_disconnect(self, sid):
-
         await self.on_leave_room(sid)
 
     async def on_tirar_carta(self,sid, SalaId, carta):
@@ -53,7 +52,6 @@ class EventHandler:
 
         print("cartas turadas : ",  cartas_tiradas)
         
-
         await self.socket.emit_to_sala( SalaId, 'mostrar_cartas_repartidas', cartas_tiradas)
 
     async def on_update_points(self,sid,team_id, type):
@@ -98,6 +96,7 @@ class EventHandler:
     async def on_start_game(self, sid, state):
         current_sala = self.socket.get_room_by_sid(sid)
         current_sala.users_ready += 1 if state else -1
+        
         print("users ready: ", current_sala.users_ready)
 
         if current_sala.users_ready == current_sala.tamaño_sala:

@@ -1,10 +1,8 @@
 import aiohttp.web
 import socketio
 import tracemalloc
-
-from Sala.Sala import Sala as SalaClass
+from Sala.Sala import Sala as Sala
 from Usuario.Usuario import Usuario
-
 
 class SocketIOApp:
     def __init__(self):
@@ -12,7 +10,6 @@ class SocketIOApp:
         self.active_rooms = []
         self.connected_users = []
         self.__connected_sockets = []
-        
         self.sio = socketio.AsyncServer(cors_allowed_origins="*")
         self.app = aiohttp.web.Application()
         self.sio.attach(self.app)
@@ -28,7 +25,6 @@ class SocketIOApp:
         for sala in self.get_active_rooms():
             for usuario in sala.users:
                 if usuario.socket_id == sid:
-                    # print("RTX ASMKDKASKDMASMK: ", sala.codigo_sala, sala.users)
                     return sala
 
     def on_event(self, *args):
@@ -87,7 +83,7 @@ class SocketIOApp:
         self.connected_users.remove(user)
 
     # salas
-    def get_active_rooms(self) -> SalaClass:
+    def get_active_rooms(self) -> Sala:
         return self.active_rooms
 
     def get_sala(self, SalaId):
@@ -96,11 +92,10 @@ class SocketIOApp:
             if sala_i.codigo_sala == SalaId:
                 return sala_i
 
-        nueva_sala = SalaClass(SalaId)
+        nueva_sala = Sala(SalaId)
         self.add_active_room(nueva_sala)
         return nueva_sala
                 
-    def add_active_room(self,sala)-> SalaClass:
+    def add_active_room(self,sala)-> Sala:
         self.active_rooms.append(sala)
 
-WRAPPER = SocketIOApp()

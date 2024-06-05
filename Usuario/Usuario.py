@@ -10,7 +10,7 @@ class Usuario:
     def set_mano(self, nueva_mano):
         self.mano = nueva_mano
 
-    def get_mano(self):
+    def get_mano(self): #
         mano = self.mano.cartas
         mano_serialized = []
         for carta in mano:

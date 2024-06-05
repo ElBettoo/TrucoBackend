@@ -19,7 +19,6 @@ class Ronda:
         all_cards = []
         for subronda in self.all_subrondas:
             all_cards.append(subronda.registro_cartas_tiradas)
-            print("toilet ", subronda.registro_cartas_tiradas)
         
         return all_cards
 
@@ -40,6 +39,8 @@ class Ronda:
 
 
         return sorted_users
+
+
 
     @property
     def users(self):

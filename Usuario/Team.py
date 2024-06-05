@@ -5,10 +5,6 @@ class Team:
         self.__points = 0
         self.__players = []
 
-
-        
-
-
     def add_player(self, new_player):
         self.players.append(new_player)
 
