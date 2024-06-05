@@ -4,6 +4,15 @@ import tracemalloc
 from Sala.Sala import Sala as Sala
 from Usuario.Usuario import Usuario
 
+
+
+    
+
+
+        
+
+
+
 class SocketIOApp:
     def __init__(self):
 
@@ -87,15 +96,31 @@ class SocketIOApp:
         return self.active_rooms
 
     def get_sala(self, SalaId):
+        existing_room = self.add_to_existing_room(SalaId)
+
+        if existing_room:
+            return existing_room
+        else: 
+            return self.create_new_room(SalaId)
+        
+
+    def add_to_existing_room(self, SalaId):
         for sala_i in self.get_active_rooms():
             print("sala ID ACA: ", SalaId)
             if sala_i.codigo_sala == SalaId:
+                print("SALA I: ", sala_i)
                 return sala_i
+        return None
 
+    
+    def create_new_room(self, SalaId):
         nueva_sala = Sala(SalaId)
         self.add_active_room(nueva_sala)
+        print("Creando nueva sala: ", nueva_sala)
         return nueva_sala
+
                 
     def add_active_room(self,sala)-> Sala:
         self.active_rooms.append(sala)
 
+WRAPPER = SocketIOApp()
