@@ -3,13 +3,20 @@ from Network.socketWrapper import WRAPPER
 from Usuario.Usuario import Usuario
 from Mazo.Mazo import Mazo
 from Usuario.UserSocket import UserSocket
+from Game.Game import Game
 
 class EventHandler:
-    def __init__(self) -> None:
-        self.socket = WRAPPER
+    def __init__(self, game) -> None:
+        self.__socket = WRAPPER
+        self.__game = game
+
+    @property
+    def game(self):
+        return self.__game
 
     def get_socket(self):
         return self.socket
+
 
     # METODOS
     def run_game(self):
@@ -33,16 +40,15 @@ class EventHandler:
     async def on_connect(self, sid, environ):
         new_user_socket = UserSocket(sid)
         self.socket.sockets_connected_wrapper.add_user_socket(new_user_socket)
-        
-        print("Conected users: ", self.socket.users_connected_wrapper.connected_users)
-        print("Connected sockets: ", self.socket.sockets_connected_wrapper.connected_sockets)
-        print("El socket:", sid, 'se conectó')
+
+
 
     async def on_disconnect(self, sid):
         self.socket.sockets_connected_wrapper.remove_user_socket(sid)
         await self.on_leave_room(sid)
 
     async def on_tirar_carta(self,sid, SalaId, carta):
+        
         current_sala = self.socket.sala_wrapper.get_sala(SalaId)
         for user in current_sala.users:
             if user.socket_id == sid: #Bien jugado sid 😀
@@ -53,7 +59,7 @@ class EventHandler:
 
         cartas_tiradas = current_sala.ronda.get_all_cartas_tiradas()[0]
 
-        print("cartas turadas : ",  cartas_tiradas)
+        print("cartas tiradas : ",  cartas_tiradas)
         
         await self.socket.emit_to_sala( SalaId, 'mostrar_cartas_repartidas', cartas_tiradas)
 
@@ -62,7 +68,6 @@ class EventHandler:
         current_sala = self.socket.sala_wrapper.get_room_by_sid(sid)
         await self.socket.emit_to_sala(current_sala.codigo_sala, 'update_points', team_id, type)
             
-    
     async def on_leave_room(self, sid):
         current_sala = self.socket.sala_wrapper.get_room_by_sid(sid)
 
@@ -87,22 +92,13 @@ class EventHandler:
         for user in sala.users:
                 await self.socket.emit_to_player(user.get_socket_id(), 'recibir_cartas', user.get_mano())
 
-
     async def on_join_room(self,sid,SalaId,Username):
 
-        current_sala = self.socket.sala_wrapper.get_sala(SalaId)
-
-        user_socket = self.socket.sockets_connected_wrapper.get_user_socket_by_socket_id(sid)
-        
-        self.socket.users_connected_wrapper.add_connected_user(user_socket, Username) # Esto no existia y no podias ver los usuarios conectados :V
-
-        current_user = Usuario(user_socket, Username)
-        user_socket.assign_user(current_user)
-        current_sala.add_user(current_user)
+        args = self.game.join_room(sid, SalaId, Username)
 
         await self.socket.sio.enter_room(sid, SalaId)
         await self.socket.emit_to_player(sid, 'join_room')
-        await self.socket.emit_to_sala(SalaId, 'recibir_jugadores', current_sala.get_usernames())
+        await self.socket.emit_to_sala(SalaId, 'recibir_jugadores', args["current_sala"].get_usernames())
 
     async def on_start_game(self, sid, state):
         current_sala = self.socket.sala_wrapper.get_room_by_sid(sid)
@@ -116,3 +112,6 @@ class EventHandler:
             for user in current_sala.users:
                     await self.socket.emit_to_player(user.get_socket_id(), 'recibir_cartas', user.get_mano())
 
+    @property
+    def socket(self):
+        return self.__socket

@@ -10,13 +10,13 @@ class SalaWrapper():
                 if usuario.socket_id == sid:
                     return sala
                 
-    def get_sala(self, SalaId):
-        existing_room = self.__add_to_existing_room(SalaId)
+    def get_sala(self, SalaId): # es join_room (bien jugado sid)
+        existing_room = self.__get_existing_room(SalaId)
 
         if existing_room:
             return existing_room
         else: 
-            return self.__create_new_room(SalaId)
+            return self.__create_new_room(SalaId) # exception error
 
     #Getters
     @property
@@ -27,7 +27,7 @@ class SalaWrapper():
     def __add_active_room(self,sala)-> Sala:
         self.active_rooms.append(sala)
  
-    def __add_to_existing_room(self, SalaId):
+    def __get_existing_room(self, SalaId):
         for sala_i in self.active_rooms:
             if sala_i.codigo_sala == SalaId:
                 return sala_i
