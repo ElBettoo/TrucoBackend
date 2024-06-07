@@ -22,6 +22,9 @@ class Team:
     @property
     def points(self):
         return self.__points
+    @points.setter
+    def points(self, pointis):
+        self.__points = pointis 
     
     @property
     def players(self):

@@ -48,48 +48,22 @@ class EventHandler:
         await self.on_leave_room(sid)
 
     async def on_tirar_carta(self,sid, SalaId, carta):
+        args = self.game.tirar_carta(sid, SalaId, carta)
         
-        current_sala = self.socket.sala_wrapper.get_sala(SalaId)
-        for user in current_sala.users:
-            if user.socket_id == sid: #Bien jugado sid 😀
-                break
+        await self.socket.emit_to_sala( SalaId, 'mostrar_cartas_repartidas', args['cartas_tiradas'])
 
-        #current_sala.add_carta_tirada({username: carta})
-        current_sala.ronda.subronda.add_carta_tirada(carta, user.username, user.team.id)
+    async def on_update_points(self,sid,team_id, num):
 
-        cartas_tiradas = current_sala.ronda.get_all_cartas_tiradas()[0]
-
-        print("cartas tiradas : ",  cartas_tiradas)
-        
-        await self.socket.emit_to_sala( SalaId, 'mostrar_cartas_repartidas', cartas_tiradas)
-
-    async def on_update_points(self,sid,team_id, type):
-
-        current_sala = self.socket.sala_wrapper.get_room_by_sid(sid)
-        await self.socket.emit_to_sala(current_sala.codigo_sala, 'update_points', team_id, type)
+        args = self.game.update_points(sid,team_id, num)
+        await self.socket.emit_to_sala(args['current_sala'].codigo_sala, 'update_points', team_id, args['total_points'])
             
     async def on_leave_room(self, sid):
-        current_sala = self.socket.sala_wrapper.get_room_by_sid(sid)
-
-        if current_sala != None:
-            user_socket = self.socket.sockets_connected_wrapper.get_user_socket_by_socket_id(sid)
-            current_sala.remove_user(user_socket.user)
-
-            print("user_socket", user_socket)
-
-            self.socket.users_connected_wrapper.remove_connected_user(sid) 
-        
-        print("current_sala: ", current_sala)
-
-
-        #print(f"USER: [{user_socket.user.username}] SOCKET: [{user_socket.socket_id}] se desconecto. Bien jugado sid")
+        self.game.leave_room(sid)
 
     async def on_switch_round(self, sid):
-        sala = self.socket.sala_wrapper.get_room_by_sid(sid)
-        sala.create_new_round()
-        
+        args = self.game.switch_round(sid)
 
-        for user in sala.users:
+        for user in args['current_sala'].users:
                 await self.socket.emit_to_player(user.get_socket_id(), 'recibir_cartas', user.get_mano())
 
     async def on_join_room(self,sid,SalaId,Username):
@@ -101,16 +75,11 @@ class EventHandler:
         await self.socket.emit_to_sala(SalaId, 'recibir_jugadores', args["current_sala"].get_usernames())
 
     async def on_start_game(self, sid, state):
-        current_sala = self.socket.sala_wrapper.get_room_by_sid(sid)
-        current_sala.users_ready += 1 if state else -1
-        
-        print("users ready: ", current_sala.users_ready)
+        args = self.game.start_game(sid, state)
 
-        if current_sala.users_ready == current_sala.tamaño_sala:
-            current_sala.start()
-            
-            for user in current_sala.users:
-                    await self.socket.emit_to_player(user.get_socket_id(), 'recibir_cartas', user.get_mano())
+        if args['game_ready']:
+            for user in args['current_sala'].users:
+                await self.socket.emit_to_player(user.get_socket_id(), 'recibir_cartas', user.get_mano())
 
     @property
     def socket(self):

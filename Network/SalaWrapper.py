@@ -13,10 +13,10 @@ class SalaWrapper():
     def get_sala(self, SalaId): # es join_room (bien jugado sid)
         existing_room = self.__get_existing_room(SalaId)
 
-        if existing_room:
-            return existing_room
-        else: 
-            return self.__create_new_room(SalaId) # exception error
+        if not(existing_room):
+            existing_room = self.__create_new_room(SalaId) # exception error
+
+        return existing_room
 
     #Getters
     @property
