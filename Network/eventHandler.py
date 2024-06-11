@@ -73,8 +73,11 @@ class EventHandler:
     async def on_start_game(self, sid, state):
         args = self.game.start_game(sid, state)
 
+        print("state: ", state)
+
         if args['game_ready']:
             for user in args['current_sala'].users:
                 await self.socket.emit_to_player(user.get_socket_id(), 'recibir_cartas', user.get_mano())
+                await self.socket.emit_to_player(user.get_socket_id(), 'ocultar_start', False)
 
     
