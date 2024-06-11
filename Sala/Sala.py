@@ -22,6 +22,8 @@ class Sala:
             self.started = True
             self.create_new_round()
             
+    def add_carta_tirada(self, card, user, team_id):
+        self.ronda.subronda.add_carta_tirada(card,user,team_id)
 
     def add_user(self, jugador):
         if self.cantidad_jugadores + 1 > self.__tamaño_sala:

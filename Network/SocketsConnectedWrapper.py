@@ -8,6 +8,7 @@ class SocketsConnectedWrapper():
         return self.__connected_sockets
     
     def add_user_socket(self, user):
+        print("asdasdsa djsakl; ", user)
         self.connected_sockets.append(user)
 
     def get_user_socket_by_socket_id(self, sid):

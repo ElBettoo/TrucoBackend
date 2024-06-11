@@ -14,9 +14,9 @@ sala_wrapper = SalaWrapper()
 sockets_connected_wrapper = SocketsConnectedWrapper()
 
 socket_implementation = SocketImplementation(socket, sala_wrapper, sockets_connected_wrapper)
-console_implementation = ConsoleImplementation()
+console_implementation = ConsoleImplementation() #actualmente esta implementacion tira error, pero muestra el mensaje de "join_room" y sirve como demostracion
 
-game = GameService(socket, user_handler, sala_wrapper,sockets_connected_wrapper, socket_implementation)
+game = GameService(socket_implementation)
 app = EventHandler(game)
 
 app.run_game()
