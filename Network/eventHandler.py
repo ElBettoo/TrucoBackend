@@ -36,7 +36,6 @@ class EventHandler:
     # EVENTOS
     async def on_connect(self, sid, environ):
         new_user_socket = UserSocket(sid)
-        print("a ver : ", new_user_socket)
         self.game.add_user_socket(new_user_socket) #MODIFICAR ESTO  ! ! ! ! ! ! ! 
 
     async def on_disconnect(self, sid):

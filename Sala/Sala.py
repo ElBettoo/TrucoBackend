@@ -39,8 +39,10 @@ class Sala:
         print(self.teams[team_index].players)
 
     def remove_user(self, User): # remove_user(sid=234234)
+        print("USUARIOS SALA ants: ", self.users)
         self.users.remove(User)
         self.cantidad_jugadores -= 1
+        print("USUARIOS SALA DSP: ", self.users)
 
     def get_usernames(self):
         lista = []

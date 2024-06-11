@@ -24,7 +24,7 @@ class SocketImplementation(GameImplementation):
         current_sala = self.sala_wrapper.get_room_by_sid(sid)
         current_sala.users_ready += 1 if ready_status == True else -1
         
-
+        print("USERS READY:", current_sala.users_ready , " on room: ", current_sala.codigo_sala)
         if current_sala.users_ready == current_sala.tamaño_sala:
             current_sala.start()
 
@@ -32,7 +32,6 @@ class SocketImplementation(GameImplementation):
 
     def switch_round(self, *args):
         (sid,) = args # (sid,) es para poder desempaquetar la tupla de un elemento 
-        print("ARGS DEL TOILET SID: ", args, sid)
         sala = self.sala_wrapper.get_room_by_sid(sid)
         sala.create_new_round()
 
@@ -65,7 +64,6 @@ class SocketImplementation(GameImplementation):
             user_socket = self.socket.sockets_connected_wrapper.get_user_socket_by_socket_id(sid)
             current_sala.remove_user(user_socket.user)
 
-            print("user_socket", user_socket)
 
             self.socket.users_connected_wrapper.remove_connected_user(sid)
 
@@ -76,7 +74,7 @@ class SocketImplementation(GameImplementation):
 
         return {'current_sala': current_sala, "total_points":current_sala.teams[team_id-1].points}
 
-    def add_user_socket(self, *args): # No veo la funcionalidad de pasar *args solamente de parametro en todas las funciones. 
+    def add_user_socket(self, *args): 
         self.sockets_connected_wrapper.add_user_socket(*args)
 
 

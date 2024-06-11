@@ -21,6 +21,3 @@ class UsersConnectedWrapper():
             if user.socket_id == sid:
                 self.connected_users.remove(user)
                 break
-
-        print("NEW Connected users: ", self.connected_users)
-        print("user: ", user)

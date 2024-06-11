@@ -2,11 +2,11 @@ from Usuario.Usuario import Usuario
 from Mazo.Mazo import Mazo
 from Usuario.UserSocket import UserSocket
 from .UserHandler import UserHandler
-
+from .Implementations.GameImplementations import GameImplementation
 
 class GameService:
-    def __init__(self, game_implementation) -> None:
-        self.__game_implementation = game_implementation # game_implementation = socket_implementation ¿? sos una mierda porky
+    def __init__(self, game_implementation) -> GameImplementation:
+        self.__game_implementation = game_implementation 
     
     @property
     def game_implementation(self):
@@ -19,7 +19,6 @@ class GameService:
         return self.game_implementation.start_game(*args)
             
     def switch_round(self,*args):
-        print("args de la puta sala: ", args)
         return self.game_implementation.switch_round(*args) #SI NO PONGO EL ASTERISCO SE ROMPE. SE ROMPE PORQUE EMPAQUETABAS LOS MISMOS DATOS VARIAS VECES  *ARGS  **ARGS. ENTONCES LOS TENES QUE DESEMPAQUETAR CUANDO LOS ENVIAS
     
     def tirar_carta(self,*args):
@@ -32,5 +31,4 @@ class GameService:
         return self.game_implementation.update_points(*args)
 
     def add_user_socket(self, *args):
-        print("ARGUMENTOS TOIET: ", args)
         return self.game_implementation.add_user_socket(*args)
