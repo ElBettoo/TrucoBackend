@@ -1,9 +1,6 @@
 import asyncio
 from Network.socketWrapper import WRAPPER
-from Usuario.Usuario import Usuario
-from Mazo.Mazo import Mazo
 from Usuario.UserSocket import UserSocket
-from Game.Game import Game
 
 class EventHandler:
     def __init__(self, game) -> None:
@@ -40,9 +37,7 @@ class EventHandler:
     # EVENTOS
     async def on_connect(self, sid, environ):
         new_user_socket = UserSocket(sid)
-        self.socket.add_user_socket(new_user_socket)
-
-
+        self.game.sockets_connected_wrapper.add_user_socket(new_user_socket) #MODIFICAR ESTO  ! ! ! ! ! ! ! 
 
     async def on_disconnect(self, sid):
         self.socket.remove_user_socket(sid) #esto capaz deberia ser un UserSocket pero bueno medio xd
@@ -70,6 +65,7 @@ class EventHandler:
     async def on_join_room(self,sid,SalaId,Username):
 
         args = self.game.join_room(sid, SalaId, Username)
+
 
         await self.socket.sio.enter_room(sid, SalaId)
         await self.socket.emit_to_player(sid, 'join_room')

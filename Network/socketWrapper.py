@@ -2,14 +2,13 @@ import aiohttp.web
 import socketio
 import tracemalloc
 
-from Network.SalaWrapper import SalaWrapper
 from Network.SocketsConnectedWrapper import SocketsConnectedWrapper
 from Network.UsersConnectedWrapper import UsersConnectedWrapper              
 class SocketIOApp:
     def __init__(self):
 
-        self.__sala_wrapper = SalaWrapper()
-        self.__sockets_connected_wrapper = SocketsConnectedWrapper()
+        #self.__sala_wrapper = SalaWrapper()
+        #self.__sockets_connected_wrapper = SocketsConnectedWrapper()
         self.__users_connected_wrapper = UsersConnectedWrapper()
 
         self.sio = socketio.AsyncServer(cors_allowed_origins="*")
@@ -23,17 +22,6 @@ class SocketIOApp:
             site = aiohttp.web.TCPSite(runner, 'localhost', 8080)
             await site.start()
 
-
-    #Metodos De la composion
-
-    def add_user_socket(self, new_user_socket):
-        self.sockets_connected_wrapper.add_user_socket(new_user_socket)
-        
-    def remove_user_socket(self, sid):
-        self.sockets_connected_wrapper.remove_user_socket(sid)
-
-
-    
     def on_event(self, *args):
         self.sio.on(*args)
 
