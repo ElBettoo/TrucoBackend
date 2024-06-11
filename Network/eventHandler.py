@@ -14,8 +14,9 @@ class EventHandler:
     def game(self):
         return self.__game
 
-    def get_socket(self):
-        return self.socket
+    @property
+    def socket(self):
+        return self.__socket
 
 
     # METODOS
@@ -39,12 +40,12 @@ class EventHandler:
     # EVENTOS
     async def on_connect(self, sid, environ):
         new_user_socket = UserSocket(sid)
-        self.socket.sockets_connected_wrapper.add_user_socket(new_user_socket)
+        self.socket.add_user_socket(new_user_socket)
 
 
 
     async def on_disconnect(self, sid):
-        self.socket.sockets_connected_wrapper.remove_user_socket(sid)
+        self.socket.remove_user_socket(sid) #esto capaz deberia ser un UserSocket pero bueno medio xd
         await self.on_leave_room(sid)
 
     async def on_tirar_carta(self,sid, SalaId, carta):
@@ -81,6 +82,4 @@ class EventHandler:
             for user in args['current_sala'].users:
                 await self.socket.emit_to_player(user.get_socket_id(), 'recibir_cartas', user.get_mano())
 
-    @property
-    def socket(self):
-        return self.__socket
+    

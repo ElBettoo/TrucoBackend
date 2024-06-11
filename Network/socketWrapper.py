@@ -16,25 +16,24 @@ class SocketIOApp:
         self.app = aiohttp.web.Application()
         self.sio.attach(self.app)
 
-    @property
-    def sala_wrapper(self):
-        return self.__sala_wrapper
-    
-    @property
-    def sockets_connected_wrapper(self):
-        return self.__sockets_connected_wrapper
-    
-    @property
-    def users_connected_wrapper(self):
-        return self.__users_connected_wrapper
-
     async def run(self):
-        tracemalloc.start()
-        runner = aiohttp.web.AppRunner(self.app)
-        await runner.setup()
-        site = aiohttp.web.TCPSite(runner, 'localhost', 8080)
-        await site.start()
+            tracemalloc.start()
+            runner = aiohttp.web.AppRunner(self.app)
+            await runner.setup()
+            site = aiohttp.web.TCPSite(runner, 'localhost', 8080)
+            await site.start()
 
+
+    #Metodos De la composion
+
+    def add_user_socket(self, new_user_socket):
+        self.sockets_connected_wrapper.add_user_socket(new_user_socket)
+        
+    def remove_user_socket(self, sid):
+        self.sockets_connected_wrapper.remove_user_socket(sid)
+
+
+    
     def on_event(self, *args):
         self.sio.on(*args)
 
@@ -64,5 +63,17 @@ class SocketIOApp:
             event_data.append(x)
 
         await self.sio.emit(to=socketId, event=event, data=event_data)
+
+    @property
+    def sala_wrapper(self):
+        return self.__sala_wrapper
+    
+    @property
+    def sockets_connected_wrapper(self):
+        return self.__sockets_connected_wrapper
+    
+    @property
+    def users_connected_wrapper(self):
+        return self.__users_connected_wrapper
 
 WRAPPER = SocketIOApp()

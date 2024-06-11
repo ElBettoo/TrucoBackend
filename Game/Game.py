@@ -14,7 +14,7 @@ class Game:
         current_sala = self.socket.sala_wrapper.get_sala(SalaId)
         user_socket = self.socket.sockets_connected_wrapper.get_user_socket_by_socket_id(sid)
         
-        self.socket.users_connected_wrapper.add_connected_user(user_socket, Username) # Esto no existia y no podias ver los usuarios conectados :V
+        self.socket.users_connected_wrapper.add_connected_user(user_socket, Username) #Esto no existia y no podias ver los usuarios conectados :V
 
 
         new_user = self.user_handler.create_user(name=Username, user_socket=user_socket)
