@@ -25,7 +25,7 @@ class GameService:
         return self.game_implementation.tirar_carta(*args)
 
     def leave_room(self,*args):
-        self.game_implementation.leave_room(*args)
+        return self.game_implementation.leave_room(*args)
 
     def update_points(self, *args):
         return self.game_implementation.update_points(*args)

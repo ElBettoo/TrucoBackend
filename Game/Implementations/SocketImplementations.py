@@ -57,16 +57,20 @@ class SocketImplementation(GameImplementation):
     def leave_room(self, *args):
         (sid,) = args 
         current_sala = self.sala_wrapper.get_room_by_sid(sid)
+        user_socket = None
         print(f"LOS JUGUETES LO VEN TODO '{sid}' sala: '{current_sala}'")
         
 
         if current_sala != None:
             user_socket = self.socket.sockets_connected_wrapper.get_user_socket_by_socket_id(sid)
             current_sala.remove_user(user_socket.user)
-
-
             self.socket.users_connected_wrapper.remove_connected_user(sid)
 
+            print("curren sala: ", current_sala)
+            print("cur euser: ", user_socket.user)
+
+        return {'current_sala': current_sala, 'user_socket': user_socket }
+    
     def update_points(self, *args):
         sid,team_id, num = args
         current_sala = self.sala_wrapper.get_room_by_sid(sid)

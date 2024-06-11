@@ -39,8 +39,8 @@ class EventHandler:
         self.game.add_user_socket(new_user_socket) #MODIFICAR ESTO  ! ! ! ! ! ! ! 
 
     async def on_disconnect(self, sid):
-        self.socket.remove_user_socket(sid) #esto capaz deberia ser un UserSocket pero bueno medio xd
         await self.on_leave_room(sid)
+        self.socket.remove_user_socket(sid)
 
     async def on_tirar_carta(self,sid, SalaId, carta):
         args = self.game.tirar_carta(sid, SalaId, carta)
@@ -53,7 +53,14 @@ class EventHandler:
         await self.socket.emit_to_sala(args['current_sala'].codigo_sala, 'update_points', team_id, args['total_points'])
             
     async def on_leave_room(self, sid):
-        self.game.leave_room(sid)
+        args = self.game.leave_room(sid)
+        current_sala = args['current_sala']
+        user_socket = args['user_socket']
+
+        if current_sala is not None and user_socket is not None:
+            await self.socket.emit_to_sala(current_sala.codigo_sala, 'leave_room', user_socket.user.username)
+        else:
+            print("Error: current_sala or user is None")
 
     async def on_switch_round(self, sid):
         args = self.game.switch_round(sid)
