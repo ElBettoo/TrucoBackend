@@ -8,10 +8,6 @@ from Network.SocketsConnectedWrapper import SocketsConnectedWrapper
 from Game.Implementations.SocketImplementations import SocketImplementation
 from Game.Implementations.ConsoleImplementations import ConsoleImplementation
 
-
-
-
-user_handler = UserHandler()
 sala_wrapper = SalaWrapper()
 sockets_connected_wrapper = SocketsConnectedWrapper()
 
