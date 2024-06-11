@@ -1,10 +1,9 @@
 import asyncio
-from Network.socketWrapper import WRAPPER
 from Usuario.UserSocket import UserSocket
 
 class EventHandler:
-    def __init__(self, game) -> None:
-        self.__socket = WRAPPER
+    def __init__(self, game, socket_wrapper) -> None:
+        self.__socket = socket_wrapper
         self.__game = game
 
     @property

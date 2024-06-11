@@ -5,10 +5,10 @@ import tracemalloc
 from Network.SocketsConnectedWrapper import SocketsConnectedWrapper
 from Network.UsersConnectedWrapper import UsersConnectedWrapper              
 class SocketIOApp:
-    def __init__(self):
+    def __init__(self, socket_connected_wrapper):
 
         #self.__sala_wrapper = SalaWrapper()
-        self.__sockets_connected_wrapper = SocketsConnectedWrapper()
+        self.__sockets_connected_wrapper = socket_connected_wrapper
         self.__users_connected_wrapper = UsersConnectedWrapper()
 
         self.sio = socketio.AsyncServer(cors_allowed_origins="*")
@@ -73,5 +73,3 @@ class SocketIOApp:
     @property
     def users_connected_wrapper(self):
         return self.__users_connected_wrapper
-
-WRAPPER = SocketIOApp()
