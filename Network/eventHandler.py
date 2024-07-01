@@ -1,21 +1,18 @@
 import asyncio
-from Network.socketWrapper import WRAPPER
-from Usuario.Usuario import Usuario
-from Mazo.Mazo import Mazo
 from Usuario.UserSocket import UserSocket
-from Game.Game import Game
 
 class EventHandler:
-    def __init__(self, game) -> None:
-        self.__socket = WRAPPER
+    def __init__(self, game, socket_wrapper) -> None:
+        self.__socket = socket_wrapper
         self.__game = game
 
     @property
     def game(self):
         return self.__game
 
-    def get_socket(self):
-        return self.socket
+    @property
+    def socket(self):
+        return self.__socket
 
 
     # METODOS
@@ -39,13 +36,11 @@ class EventHandler:
     # EVENTOS
     async def on_connect(self, sid, environ):
         new_user_socket = UserSocket(sid)
-        self.socket.sockets_connected_wrapper.add_user_socket(new_user_socket)
-
-
+        self.game.add_user_socket(new_user_socket) #MODIFICAR ESTO  ! ! ! ! ! ! ! 
 
     async def on_disconnect(self, sid):
-        self.socket.sockets_connected_wrapper.remove_user_socket(sid)
         await self.on_leave_room(sid)
+        self.socket.remove_user_socket(sid)
 
     async def on_tirar_carta(self,sid, SalaId, carta):
         args = self.game.tirar_carta(sid, SalaId, carta)
@@ -58,7 +53,14 @@ class EventHandler:
         await self.socket.emit_to_sala(args['current_sala'].codigo_sala, 'update_points', team_id, args['total_points'])
             
     async def on_leave_room(self, sid):
-        self.game.leave_room(sid)
+        args = self.game.leave_room(sid)
+        current_sala = args['current_sala']
+        user_socket = args['user_socket']
+
+        if current_sala is not None and user_socket is not None:
+            await self.socket.emit_to_sala(current_sala.codigo_sala, 'leave_room', user_socket.user.username)
+        else:
+            print("Error: current_sala or user is None")
 
     async def on_switch_round(self, sid):
         args = self.game.switch_round(sid)
@@ -70,6 +72,7 @@ class EventHandler:
 
         args = self.game.join_room(sid, SalaId, Username)
 
+
         await self.socket.sio.enter_room(sid, SalaId)
         await self.socket.emit_to_player(sid, 'join_room')
         await self.socket.emit_to_sala(SalaId, 'recibir_jugadores', args["current_sala"].get_usernames())
@@ -77,10 +80,11 @@ class EventHandler:
     async def on_start_game(self, sid, state):
         args = self.game.start_game(sid, state)
 
+        print("state: ", state)
+
         if args['game_ready']:
             for user in args['current_sala'].users:
                 await self.socket.emit_to_player(user.get_socket_id(), 'recibir_cartas', user.get_mano())
+                await self.socket.emit_to_player(user.get_socket_id(), 'ocultar_start', False)
 
-    @property
-    def socket(self):
-        return self.__socket
+    

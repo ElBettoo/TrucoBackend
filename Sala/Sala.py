@@ -22,6 +22,8 @@ class Sala:
             self.started = True
             self.create_new_round()
             
+    def add_carta_tirada(self, card, user, team_id):
+        self.ronda.subronda.add_carta_tirada(card,user,team_id)
 
     def add_user(self, jugador):
         if self.cantidad_jugadores + 1 > self.__tamaño_sala:
@@ -37,8 +39,10 @@ class Sala:
         print(self.teams[team_index].players)
 
     def remove_user(self, User): # remove_user(sid=234234)
+        print("USUARIOS SALA ants: ", self.users)
         self.users.remove(User)
         self.cantidad_jugadores -= 1
+        print("USUARIOS SALA DSP: ", self.users)
 
     def get_usernames(self):
         lista = []
