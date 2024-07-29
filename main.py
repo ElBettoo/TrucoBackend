@@ -5,11 +5,13 @@ from Game.SalaWrapper import SalaWrapper
 from Network.socketWrapper import SocketIOApp
 from Network.SocketsConnectedWrapper import SocketsConnectedWrapper
 
+
 from Game.Implementations.SocketImplementations import SocketImplementation
 from Game.Implementations.ConsoleImplementations import ConsoleImplementation
 
 sala_wrapper = SalaWrapper()
 sockets_connected_wrapper = SocketsConnectedWrapper()
+
 
 socket_wrapper = SocketIOApp(sockets_connected_wrapper)
 socket_implementation = SocketImplementation(socket_wrapper, sala_wrapper, sockets_connected_wrapper)
@@ -20,5 +22,7 @@ game = GameService(socket_implementation)
 app = EventHandler(game, socket_wrapper)
 
 app.run_game()
+# hadada
+print('inodoro')
 
 
