@@ -10,7 +10,14 @@ class SubRonda:
         pass
 
     def get_winner(self):
-        pass
+
+        max = self.registro_cartas_tiradas[0]
+        for card in self.registro_cartas_tiradas:
+            if card['card'].valor < max['card'].valor:
+                max = card
+
+        return max
+        
 
 
     @property

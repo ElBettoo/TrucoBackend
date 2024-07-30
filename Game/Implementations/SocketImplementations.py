@@ -44,15 +44,31 @@ class SocketImplementation(GameImplementation):
             if user.socket_id == sid: #Bien jugado sid 😀
                 break
         
-        #MODIFICAR ESTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-        #current_sala.add_carta_tirada({username: carta})
-        current_sala.add_carta_tirada(carta, user.username, user.team.id)
-
+        for userx in current_sala.users:
+            if userx.username == user.username:
+                for cartas in userx.mano.cartas:
+                    if carta == cartas.key:
+                        current_sala.add_carta_tirada(cartas, user.username, user.team.id)
+                    
+    
         cartas_tiradas = current_sala.ronda.get_all_cartas_tiradas()[0]
 
-        print("cartas tiradas : ",  cartas_tiradas)
 
-        return {'cartas_tiradas': cartas_tiradas}
+
+        cartas_tiradas_event = []
+        for card in cartas_tiradas: #HACERLO UNA FUNCION
+            card_x = {'card': card['card'].key, 'user':card['user'], 'team_id':card['team_id']}
+            cartas_tiradas_event.append(card_x)
+        
+        print("TOILETOFA: ", current_sala.ronda.subronda.registro_cartas_tiradas)
+
+        if len(current_sala.ronda.subronda.registro_cartas_tiradas) ==  current_sala.tamaño_sala:
+            print("CARTA GANADORA ! !  ! ! : ", current_sala.ronda.subronda.get_winner())
+
+
+
+
+        return {'cartas_tiradas': cartas_tiradas_event}
 
     def leave_room(self, *args):
         (sid,) = args 

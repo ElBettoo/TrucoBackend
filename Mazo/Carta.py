@@ -4,9 +4,6 @@ class Carta:
         self.__palo = palo
         self.__valor = valor
 
-        
-
-    
     def __str__(self):
         return self.nombre
     
