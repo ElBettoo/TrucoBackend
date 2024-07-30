@@ -14,7 +14,6 @@ class Ronda:
             chosen_cards = self.mazo.get_mano()
             user.set_mano(chosen_cards)
 
-
     def get_all_cartas_tiradas(self): 
         all_cards = []
         for subronda in self.all_subrondas:
@@ -39,6 +38,10 @@ class Ronda:
 
 
         return sorted_users
+
+    def new_current_subronda(self):
+        self.__current_subronda = SubRonda(self.intercalate_users_by_team())
+    
 
 
 

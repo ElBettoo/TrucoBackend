@@ -62,12 +62,11 @@ class SocketImplementation(GameImplementation):
         
         print("TOILETOFA: ", current_sala.ronda.subronda.registro_cartas_tiradas)
 
-        if len(current_sala.ronda.subronda.registro_cartas_tiradas) ==  current_sala.tamaño_sala:
+        if len(current_sala.ronda.subronda.registro_cartas_tiradas) == current_sala.tamaño_sala:
             print("CARTA GANADORA ! !  ! ! : ", current_sala.ronda.subronda.get_winner())
+            #current_sala.ronda.new_current_subronda() ESTA LINEA HACE QUE LAS CARTAS NO SE VEAN
 
-
-
-
+        
         return {'cartas_tiradas': cartas_tiradas_event}
 
     def leave_room(self, *args):
